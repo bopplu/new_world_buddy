@@ -30,8 +30,15 @@ class ShoppingListModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addItem(ShoppingItem shoppingItem) {
-    _items.add(shoppingItem);
+  void addItem(String name, int amount) {
+    final ShoppingItem? item = _items.cast<ShoppingItem?>().firstWhere(
+        (element) => (element?.name ?? '') == name,
+        orElse: () => null);
+    final int restAmount = !item!.complete ? item.amount : 0;
+    if (item.complete) {
+      _items.remove(item);
+    }
+    _items.add(ShoppingItem(name, amount + restAmount, false));
     notifyListeners();
   }
 }

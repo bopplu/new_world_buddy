@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:new_world_buddy/catalog/add_screen.dart';
 import 'package:new_world_buddy/catalog/catalog_model.dart';
 import 'package:new_world_buddy/catalog/catalog_screen.dart';
 import 'package:new_world_buddy/catalog/category_screen.dart';
@@ -37,6 +38,7 @@ class NewWorldBuddy extends StatelessWidget {
           ShoppingListScreen.route: (_) => const ShoppingListScreen(),
           CatalogScreen.route: (_) => const CatalogScreen(),
           CategoryScreen.route: (_) => const CategoryScreen(),
+          AddScreen.route: (_) => const AddScreen()
         },
       ),
       providers: [

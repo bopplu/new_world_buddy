@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:new_world_buddy/catalog/add_screen.dart';
 import 'package:new_world_buddy/catalog/catalog_model.dart';
 import 'package:new_world_buddy/commons/generic_card.dart';
 import 'package:provider/src/provider.dart';
@@ -34,16 +35,21 @@ class CategoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(20),
-          child: Text(
-            item.name,
-            style: Theme.of(context).textTheme.bodyText1,
-          ),
-        )
-      ],
+    return InkWell(
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(20),
+            child: Text(
+              item.name,
+              style: Theme.of(context).textTheme.bodyText1,
+            ),
+          )
+        ],
+      ),
+      onTap: () {
+        Navigator.pushNamed(context, AddScreen.route, arguments: item.name);
+      },
     );
   }
 }

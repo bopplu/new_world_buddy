@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 
 @immutable
@@ -7,6 +9,10 @@ class ShoppingItem {
   final bool complete;
 
   const ShoppingItem(this.name, this.amount, this.complete);
+
+  ShoppingItem copyWith({String? name, int? amount, bool? complete}) {
+    return ShoppingItem(name ?? this.name, amount ?? this.amount, complete ?? this.complete);
+  }
 }
 
 class ShoppingListModel extends ChangeNotifier {
@@ -31,14 +37,22 @@ class ShoppingListModel extends ChangeNotifier {
   }
 
   void addItem(String name, int amount) {
-    final ShoppingItem? item = _items.cast<ShoppingItem?>().firstWhere(
-        (element) => (element?.name ?? '') == name,
-        orElse: () => null);
-    final int restAmount = !item!.complete ? item.amount : 0;
-    if (item.complete) {
+    final ShoppingItem? item =
+        _items.cast<ShoppingItem?>().firstWhere((element) => (element?.name ?? '') == name, orElse: () => null);
+    int restAmount;
+    if ((item?.complete ?? false)) {
       _items.remove(item);
     }
+    restAmount = item?.amount ?? 0;
     _items.add(ShoppingItem(name, amount + restAmount, false));
+    notifyListeners();
+  }
+
+  void completeItem(String name) {
+    final int index = _items.indexWhere((element) => element.name == name);
+    final item = _items[index];
+    log('index $index of item $_items');
+    _items[index] = item.copyWith(complete: !item.complete);
     notifyListeners();
   }
 }

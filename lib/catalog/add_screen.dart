@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:new_world_buddy/shopping/shopping_list_model.dart';
+import 'package:new_world_buddy/shopping/shopping_list_screen.dart';
 import 'package:provider/provider.dart';
 
 class AddScreen extends StatefulWidget {
@@ -24,33 +25,27 @@ class _AddScreenState extends State<AddScreen> {
   @override
   Widget build(BuildContext context) {
     final itemName = ModalRoute.of(context)!.settings.arguments as String;
-    final ShoppingListModel shoppingListModel =
-        context.read<ShoppingListModel>();
+    final ShoppingListModel shoppingListModel = context.read<ShoppingListModel>();
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add'),
         actions: [
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: GestureDetector(
-              onTap: () {
-                shoppingListModel.addItem(itemName, _amount);
-              },
-              child: Text(
-                'Done',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText1!
-                    .copyWith(fontWeight: FontWeight.bold),
-              ),
+          TextButton(
+            child: Text(
+              'Done',
+              style: Theme.of(context).textTheme.bodyText1!.copyWith(fontWeight: FontWeight.bold),
             ),
+            onPressed: () {
+              shoppingListModel.addItem(itemName, _amount);
+              Navigator.popUntil(context, ModalRoute.withName(ShoppingListScreen.route));
+            },
           )
         ],
       ),
       body: Column(
         children: [
-          Container(
+          SizedBox(
             height: 100,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,

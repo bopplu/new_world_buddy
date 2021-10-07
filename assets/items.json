@@ -1,0 +1,86 @@
+{
+  "items": [
+    {
+      "name": "Flint",
+      "category": "ore",
+      "tier": 1
+    },
+    {
+      "name": "Stone",
+      "category": "ore",
+      "tier": 1
+    },
+    {
+      "name": "Iron ore",
+      "category": "ore",
+      "tier": 1
+    },
+    {
+      "name": "Iron Ingot",
+      "category": "ore",
+      "tier": 2,
+      "ingredients": [
+        {
+          "name": "Iron ore",
+          "quantity": 4
+        }
+      ]
+    },
+    {
+      "name": "Green Wood",
+      "category": "wood",
+      "tier": 1
+    },
+    {
+      "name": "Mature Wood",
+      "category": "wood",
+      "tier": 2
+    },
+    {
+      "name": "Feather",
+      "category": "animals",
+      "tier": 1
+    },
+    {
+      "name": "Linen",
+      "category": "cloth",
+      "tier": 2
+    },
+    {
+      "name": "Fiber",
+      "category": "cloth",
+      "tier": 1
+    },
+    {
+      "name": "Coarse Leather",
+      "category": "animals",
+      "tier": 2,
+      "ingredients": [
+        {
+          "name": "Rawhide",
+          "quantity": 4
+        }
+      ]
+    },
+    {
+      "name": "Rawhide",
+      "category": "animals",
+      "tier": 1
+    },
+    {
+      "name": "Stone Brick",
+      "category": "ore",
+      "tier": 2,
+      "ingredients": [
+        {
+          "name": "Stone Block",
+          "quantity": 4
+        },
+        {
+          "name": "Sandpaper",
+          "quantity": 1
+        }
+      ]
+    }
+  ]
+}

@@ -17,7 +17,7 @@ class DashboardScreen extends StatelessWidget {
           mainAxisSpacing: 10,
           crossAxisSpacing: 10,
           crossAxisCount: 2,
-          children: <Widget>[GenericCard(Gcard(name: 'Shopping', url: ShoppingListScreen.route))],
+          children: <Widget>[GenericCard(Gcard('Town Board', ShoppingListScreen.route))],
         ),
       ),
     );

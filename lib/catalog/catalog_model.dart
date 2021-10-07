@@ -1,57 +1,51 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'dart:convert';
+
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:http/http.dart' as http;
 import 'package:new_world_buddy/catalog/category_screen.dart';
+import 'package:new_world_buddy/catalog/item.dart';
 import 'package:new_world_buddy/commons/generic_card.dart';
 
-class Category implements Gcard {
-  @override
-  String name;
-  @override
-  String url;
+final futureItemProvider = FutureProvider<List<Item>>((ref) async {
+  final response = await http.get(Uri.parse('https://storage.googleapis.com/new-world-buddy/items.json'));
 
-  Category(this.name, this.url);
+  if (response.statusCode == 200) {
+    return ItemList.fromJson(jsonDecode(response.body)).items;
+  } else {
+    throw Exception('Failed to load item list');
+  }
+});
+
+final selectedCategory = StateProvider<ItemCategory?>((ref) => null);
+
+final itemsByCategory = Provider<AsyncValue<List<Item>>>((ref) {
+  final category = ref.watch(selectedCategory);
+  return ref.watch(futureItemProvider).whenData((list) {
+    return list.where((item) => item.category.toLowerCase() == category.state?.name.toLowerCase()).toList();
+  });
+});
+
+class CategoryCard extends Gcard {
+  final ItemCategory category;
+
+  @override
+  final String url;
+
+  CategoryCard(this.category, this.url) : super(category.name, url);
 }
 
-@immutable
-class Item {
-  final String name;
-  final String category;
-  final int tier;
+final futureCategoryProvider = FutureProvider<List<ItemCategory>>((ref) async {
+  final response = await http.get(Uri.parse('https://storage.googleapis.com/new-world-buddy/categories.json'));
 
-  const Item(this.name, this.category, this.tier);
-
-  @override
-  String toString() {
-    return 'Item{name: $name, category: $category, tier: $tier}';
+  if (response.statusCode == 200) {
+    return ItemCategoryList.fromJson(jsonDecode(response.body)).categories;
+  } else {
+    throw Exception('Failed to load category list');
   }
-}
+});
 
-class CatalogModel extends ChangeNotifier {
-  final List<Category> _categories = [
-    Category('Wood', CategoryScreen.route),
-    Category('Ore', CategoryScreen.route),
-    Category('Potions', CategoryScreen.route),
-    Category('Hides', CategoryScreen.route),
-    Category('Meats', CategoryScreen.route)
-  ];
-  final List<Item> _items = [
-    Item('Green Wood', 'Wood', 1),
-    Item('Mature Wood', 'Wood', 2),
-    Item('Iron Ore', 'Ore', 1),
-    Item('Gold Ore', 'Ore', 2),
-    Item('Star Metal Ore', 'Ore', 3)
-  ];
-
-  List<Category> get categories => [..._categories];
-
-  Category getCategoryByPosition(int index) {
-    final category = _categories[index];
-    return Category(category.name, category.url);
-  }
-
-  List<Item> getItemsByCategory(String category) {
-    return [..._items.where((element) => element.category == category)];
-  }
-
-  List<Item> get items => [..._items];
-}
+final catalogWidgetProvider = Provider<AsyncValue<List<CategoryCard>>>((ref) {
+  return ref
+      .watch(futureCategoryProvider)
+      .whenData((list) => list.map((category) => CategoryCard(category, CategoryScreen.route)).toList());
+});

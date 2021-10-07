@@ -4,13 +4,14 @@ class Gcard {
   final String name;
   final String url;
 
-  Gcard({required this.name, required this.url});
+  Gcard(this.name, this.url);
 }
 
 class GenericCard extends StatelessWidget {
   final Gcard cardInfo;
+  final Function? onClick;
 
-  const GenericCard(this.cardInfo, {Key? key}) : super(key: key);
+  const GenericCard(this.cardInfo, {Key? key, this.onClick}) : super(key: key);
 
   void selectSection(ctx) {
     Navigator.of(ctx).pushNamed(cardInfo.url, arguments: cardInfo);
@@ -20,7 +21,7 @@ class GenericCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       child: Card(
-        color: Theme.of(context).canvasColor,
+        // color: Theme.of(context).canvasColor,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -33,7 +34,12 @@ class GenericCard extends StatelessWidget {
         ),
       ),
       splashColor: Theme.of(context).primaryColor,
-      onTap: () => selectSection(context),
+      onTap: () {
+        if (onClick != null) {
+          onClick!();
+        }
+        selectSection(context);
+      },
     );
   }
 }

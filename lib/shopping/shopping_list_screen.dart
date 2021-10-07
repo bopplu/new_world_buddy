@@ -1,86 +1,129 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:new_world_buddy/catalog/catalog_screen.dart';
+import 'package:new_world_buddy/locations/location_provider.dart';
 import 'package:new_world_buddy/shopping/shopping_list_model.dart';
-import 'package:provider/provider.dart';
 
-enum ShoppingListActions { clear }
+enum ShoppingListActions { clear, clearDone }
 
-class ShoppingListScreen extends StatelessWidget {
+class ShoppingListScreen extends HookWidget {
   static const route = 'shopping-list';
 
   const ShoppingListScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ShoppingListModel>(
-      builder: (ctx, shoppingList, child) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Shopping List'),
-          elevation: 0,
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 20),
-              child: PopupMenuButton<ShoppingListActions>(
-                onSelected: (choice) {
-                  switch (choice) {
-                    case ShoppingListActions.clear:
-                      final shoppingListModel = context.read<ShoppingListModel>();
-                      shoppingListModel.clearList();
-                      break;
-                  }
-                },
-                itemBuilder: (ctx) => [
-                  const PopupMenuItem(
-                    child: Text('Clear List'),
-                    value: ShoppingListActions.clear,
-                  ),
-                ],
-              ),
+    final filteredShoppingList = useProvider(filteredShoppingListProvider);
+    final locationList = useProvider(locationListProvider);
+    final selectedLocation = useProvider(selectedLocationProvider);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          children: <Widget>[
+            DropdownButton(
+              value: selectedLocation,
+              items: locationList
+                  .map(
+                    (loc) => DropdownMenuItem(
+                      child: Text(loc),
+                      value: loc,
+                    ),
+                  )
+                  .toList(),
+              onChanged: (newVal) {
+                context.read(selectedLocationProvider.notifier).selectLocation(newVal ?? selectedLocation);
+              },
             ),
           ],
         ),
-        body: ListView.separated(
-          itemCount: shoppingList.items.length,
-          itemBuilder: (ctx, index) => ShoppingRow(index),
-          separatorBuilder: (_, index) => const Divider(
+        elevation: 0,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: PopupMenuButton<ShoppingListActions>(
+              onSelected: (choice) {
+                switch (choice) {
+                  case ShoppingListActions.clear:
+                    context.read(shoppingListProvider.notifier).clearList(selectedLocation);
+                    break;
+                  case ShoppingListActions.clearDone:
+                    context.read(shoppingListProvider.notifier).clearDone(selectedLocation);
+                    break;
+                }
+              },
+              itemBuilder: (ctx) => [
+                const PopupMenuItem(
+                  child: Text('Clear Done'),
+                  value: ShoppingListActions.clearDone,
+                ),
+                const PopupMenuItem(
+                  child: Text('Clear List'),
+                  value: ShoppingListActions.clear,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      body: Row(
+        children: [
+          Flexible(
+            child: ListView.separated(
+              itemCount: filteredShoppingList.length,
+              itemBuilder: (ctx, index) => ShoppingRow(index),
+              separatorBuilder: (_, index) => const Divider(
+                thickness: 1,
+              ),
+            ),
+          ),
+          const VerticalDivider(
             thickness: 1,
           ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).pushNamed(CatalogScreen.route);
-          },
-          child: const Icon(
-            Icons.add,
-            color: Colors.black,
-            size: 32,
+          Flexible(
+            child: ListView.separated(
+              itemCount: filteredShoppingList.length,
+              itemBuilder: (ctx, index) => ShoppingRow(index),
+              separatorBuilder: (_, index) => const Divider(
+                thickness: 1,
+              ),
+            ),
           ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed(CatalogScreen.route);
+        },
+        child: const Icon(
+          Icons.add,
+          color: Colors.black,
+          size: 32,
         ),
       ),
     );
   }
 }
 
-class ShoppingRow extends StatelessWidget {
+class ShoppingRow extends HookWidget {
   final int index;
 
   const ShoppingRow(this.index, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final shoppingListModel = context.read<ShoppingListModel>();
-    final item = shoppingListModel.getByPosition(index);
+    final filteredShoppingList = useProvider(filteredShoppingListProvider);
+    final item = filteredShoppingList[index];
 
     final textStyle = Theme.of(context).textTheme.bodyText1;
     final textStyleStrikethrough = textStyle!.copyWith(decoration: TextDecoration.lineThrough);
 
     return InkWell(
-      onTap: () {
-        shoppingListModel.completeItem(item.name);
-      },
+      onTap: () => context.read(shoppingListProvider.notifier).completeItem(item.id),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
         child: Text.rich(
           TextSpan(
             children: [

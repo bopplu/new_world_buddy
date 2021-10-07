@@ -1,31 +1,36 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:new_world_buddy/locations/location_provider.dart';
 import 'package:new_world_buddy/shopping/shopping_list_model.dart';
 import 'package:new_world_buddy/shopping/shopping_list_screen.dart';
-import 'package:provider/provider.dart';
 
-class AddScreen extends StatefulWidget {
+final amountProvider = StateNotifierProvider((ref) => Amount());
+
+class Amount extends StateNotifier<int> {
+  Amount() : super(0);
+
+  void increment(int amount) {
+    state += amount;
+  }
+
+  void reset() {
+    state = 0;
+  }
+}
+
+class AddScreen extends HookWidget {
   static const String route = "/add-screen";
 
   const AddScreen({Key? key}) : super(key: key);
 
   @override
-  _AddScreenState createState() => _AddScreenState();
-}
-
-class _AddScreenState extends State<AddScreen> {
-  int _amount = 0;
-
-  void increaseAmount(int amount) {
-    setState(() {
-      _amount += amount;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     final itemName = ModalRoute.of(context)!.settings.arguments as String;
-    final ShoppingListModel shoppingListModel = context.read<ShoppingListModel>();
+    final _amount = useProvider(amountProvider);
+    final location = useProvider(selectedLocationProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -37,8 +42,9 @@ class _AddScreenState extends State<AddScreen> {
               style: Theme.of(context).textTheme.bodyText1!.copyWith(fontWeight: FontWeight.bold),
             ),
             onPressed: () {
-              shoppingListModel.addItem(itemName, _amount);
+              context.read(shoppingListProvider.notifier).addItem(itemName, _amount, location);
               Navigator.popUntil(context, ModalRoute.withName(ShoppingListScreen.route));
+              context.read(amountProvider.notifier).reset();
             },
           )
         ],
@@ -65,12 +71,12 @@ class _AddScreenState extends State<AddScreen> {
             semanticChildCount: 6,
             crossAxisCount: 2,
             children: [
-              AdderCard(1, increaseAmount),
-              AdderCard(5, increaseAmount),
-              AdderCard(10, increaseAmount),
-              AdderCard(30, increaseAmount),
-              AdderCard(50, increaseAmount),
-              AdderCard(100, increaseAmount)
+              AdderCard(1, context.read(amountProvider.notifier).increment),
+              AdderCard(5, context.read(amountProvider.notifier).increment),
+              AdderCard(10, context.read(amountProvider.notifier).increment),
+              AdderCard(30, context.read(amountProvider.notifier).increment),
+              AdderCard(50, context.read(amountProvider.notifier).increment),
+              AdderCard(100, context.read(amountProvider.notifier).increment)
             ],
             shrinkWrap: true,
           ),
@@ -89,7 +95,7 @@ class AdderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      child: Container(
+      child: SizedBox(
         child: Card(
           child: Text(toAdd.toString()),
         ),

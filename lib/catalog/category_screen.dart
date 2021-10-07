@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:new_world_buddy/catalog/add_screen.dart';
 import 'package:new_world_buddy/catalog/catalog_model.dart';
 import 'package:new_world_buddy/commons/generic_card.dart';
-import 'package:provider/src/provider.dart';
 
-class CategoryScreen extends StatelessWidget {
+import 'item.dart';
+
+class CategoryScreen extends HookWidget {
   static const String route = '/category';
 
   const CategoryScreen({Key? key}) : super(key: key);
@@ -12,19 +15,31 @@ class CategoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as Gcard;
-    final catalogModel = context.read<CatalogModel>();
-    final itemsByCategory = catalogModel.getItemsByCategory(args.name);
+    final categoryItems = useProvider(itemsByCategory);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(args.name),
-      ),
-      body: ListView.separated(
-        itemCount: itemsByCategory.length,
-        itemBuilder: (ctx, i) => CategoryItem(itemsByCategory[i]),
-        separatorBuilder: (ctx, i) => const Divider(),
-      ),
-    );
+    return categoryItems.when(
+        data: (items) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(args.name),
+            ),
+            body: ListView.separated(
+              itemCount: items.length,
+              itemBuilder: (ctx, i) => CategoryItem(items[i]),
+              separatorBuilder: (ctx, i) => const Divider(),
+            ),
+          );
+        },
+        loading: () => const Scaffold(
+              body: Center(
+                child: SizedBox(
+                  child: CircularProgressIndicator(),
+                  height: 64,
+                  width: 64,
+                ),
+              ),
+            ),
+        error: (err, stack) => ErrorWidget(err));
   }
 }
 

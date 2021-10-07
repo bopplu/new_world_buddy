@@ -1,58 +1,76 @@
+import 'dart:convert';
 import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:new_world_buddy/catalog/item.dart';
+import 'package:new_world_buddy/locations/location_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
-@immutable
-class ShoppingItem {
-  final String name;
-  final int amount;
-  final bool complete;
+const _uuid = Uuid();
 
-  const ShoppingItem(this.name, this.amount, this.complete);
+final shoppingListProvider = StateNotifierProvider<ShoppingList, List<ShoppingItem>>((ref) {
+  final SharedPreferences? prefs =
+      ref.watch(futurePreferencesProvider).maybeWhen(data: (data) => data, orElse: () => null);
+  return ShoppingList(prefs);
+});
 
-  ShoppingItem copyWith({String? name, int? amount, bool? complete}) {
-    return ShoppingItem(name ?? this.name, amount ?? this.amount, complete ?? this.complete);
+final filteredShoppingListProvider = Provider<List<ShoppingItem>>((ref) {
+  final shoppingList = ref.watch(shoppingListProvider);
+  final location = ref.watch(selectedLocationProvider);
+  return shoppingList.where((item) => item.location == location).toList();
+});
+
+class ShoppingList extends StateNotifier<List<ShoppingItem>> {
+  final SharedPreferences? _prefs;
+  static const String prefKey = 'shoppingList';
+
+  ShoppingList(this._prefs)
+      : super(_prefs?.getStringList(prefKey)?.map((e) {
+              return ShoppingItem.fromJson(json.decode(e));
+            }).toList() ??
+            []);
+
+  void addItem(String name, int amount, String location) {
+    state = [...state, ShoppingItem(_uuid.v4(), name, amount, location, false)];
+    saveItems();
+  }
+
+  void clearList(String location) {
+    state = [...state.where((item) => item.location != location)];
+    saveItems();
+  }
+
+  void clearDone(String location) {
+    state = [...state.where((item) => !item.complete || item.location != location)];
+    saveItems();
+  }
+
+  void completeItem(String id) {
+    state = [
+      ...state.where((element) => element.id != id),
+      ...state.where((element) => element.id == id).map((e) => e.copyWith(complete: !e.complete))
+    ];
+    saveItems();
+  }
+
+  void saveItems() {
+    _prefs?.setStringList(
+        prefKey,
+        state.map((e) {
+          return json.encode(e);
+        }).toList());
   }
 }
 
-class ShoppingListModel extends ChangeNotifier {
-  final List<ShoppingItem> _items = [
-    ShoppingItem('Green Wood', 100, true),
-    ShoppingItem('Iron Ore', 500, false),
-    ShoppingItem('Common Health Potion', 15, false),
-  ];
+final futurePreferencesProvider =
+    FutureProvider<SharedPreferences>((ref) async => await SharedPreferences.getInstance());
 
-  List<ShoppingItem> get items {
-    return [..._items];
-  }
-
-  ShoppingItem getByPosition(index) {
-    final item = _items[index];
-    return ShoppingItem(item.name, item.amount, item.complete);
-  }
-
-  void clearList() {
-    _items.clear();
-    notifyListeners();
-  }
-
-  void addItem(String name, int amount) {
-    final ShoppingItem? item =
-        _items.cast<ShoppingItem?>().firstWhere((element) => (element?.name ?? '') == name, orElse: () => null);
-    int restAmount;
-    if ((item?.complete ?? false)) {
-      _items.remove(item);
-    }
-    restAmount = item?.amount ?? 0;
-    _items.add(ShoppingItem(name, amount + restAmount, false));
-    notifyListeners();
-  }
-
-  void completeItem(String name) {
-    final int index = _items.indexWhere((element) => element.name == name);
-    final item = _items[index];
-    log('index $index of item $_items');
-    _items[index] = item.copyWith(complete: !item.complete);
-    notifyListeners();
-  }
-}
+final preferencesProvider = Provider((ref) {
+  return ref.watch(futurePreferencesProvider).maybeWhen(
+      data: (data) => data,
+      error: (err, stack) {
+        log('encountered error while fetching provider $err');
+      },
+      orElse: () => null);
+});

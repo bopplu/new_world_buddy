@@ -512,6 +512,28 @@
           "quantity": 18
         }
       ]
+    },
+    {
+      "name": "Rugged Leather",
+      "category": "animals",
+      "tier": 3,
+      "ingredients": [
+        {
+          "name": "Coarse Leather",
+          "quantity": 4
+        },
+        {
+          "name": "Tannin",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "name": "Tannin",
+      "category": "",
+      "tier": 1,
+      "ingredients": [
+      ]
     }
   ]
 }

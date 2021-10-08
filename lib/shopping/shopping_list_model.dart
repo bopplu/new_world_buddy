@@ -80,8 +80,9 @@ class ShoppingList extends StateNotifier<List<ShoppingItem>> {
             []);
 
   void addItem(String name, int amount, String location) {
-    final ShoppingItem? existingItem = state.singleWhereOrNull((item) => item.name == name);
-    final others = state.where((element) => element.name != name);
+    final ShoppingItem? existingItem =
+        state.singleWhereOrNull((item) => item.name == name && item.location == location);
+    final others = state.where((element) => element.id != existingItem?.id);
 
     final existingAmount = existingItem?.amount ?? 0;
 

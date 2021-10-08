@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:new_world_buddy/catalog/catalog_model.dart';
 import 'package:new_world_buddy/catalog/catalog_screen.dart';
 import 'package:new_world_buddy/catalog/item.dart';
 import 'package:new_world_buddy/locations/location_provider.dart';
 import 'package:new_world_buddy/shopping/shopping_list_model.dart';
 
-enum ShoppingListActions { clear, clearDone }
+enum ShoppingListActions { refresh, clear, clearDone }
 
 class ShoppingListScreen extends HookWidget {
   static const route = 'shopping-list';
@@ -54,12 +55,21 @@ class ShoppingListScreen extends HookWidget {
                   case ShoppingListActions.clearDone:
                     context.read(shoppingListProvider.notifier).clearDone(selectedLocation);
                     break;
+                  case ShoppingListActions.refresh:
+                    context.refresh(futureItemProvider);
+                    context.refresh(futureCategoryProvider);
+                    break;
                 }
               },
-              itemBuilder: (ctx) => [
+              itemBuilder: (ctx) =>
+              [
                 const PopupMenuItem(
                   child: Text('Clear Done'),
                   value: ShoppingListActions.clearDone,
+                ),
+                const PopupMenuItem(
+                  child: Text('Refresh'),
+                  value: ShoppingListActions.refresh,
                 ),
                 const PopupMenuItem(
                   child: Text('Clear List'),

@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:new_world_buddy/catalog/catalog_screen.dart';
+import 'package:new_world_buddy/catalog/item.dart';
 import 'package:new_world_buddy/locations/location_provider.dart';
 import 'package:new_world_buddy/shopping/shopping_list_model.dart';
 
@@ -16,6 +17,7 @@ class ShoppingListScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final filteredShoppingList = useProvider(filteredShoppingListProvider);
+    final ingredientShoppingList = useProvider(ingredientShoppingListProvider);
     final locationList = useProvider(locationListProvider);
     final selectedLocation = useProvider(selectedLocationProvider);
 
@@ -73,7 +75,11 @@ class ShoppingListScreen extends HookWidget {
           Flexible(
             child: ListView.separated(
               itemCount: filteredShoppingList.length,
-              itemBuilder: (ctx, index) => ShoppingRow(index),
+              itemBuilder: (ctx, index) => ShoppingRow(
+                index,
+                filteredShoppingList,
+                onTap: () => ctx.read(shoppingListProvider.notifier).completeItem(filteredShoppingList[index].id),
+              ),
               separatorBuilder: (_, index) => const Divider(
                 thickness: 1,
               ),
@@ -84,8 +90,11 @@ class ShoppingListScreen extends HookWidget {
           ),
           Flexible(
             child: ListView.separated(
-              itemCount: filteredShoppingList.length,
-              itemBuilder: (ctx, index) => ShoppingRow(index),
+              itemCount: ingredientShoppingList.length,
+              itemBuilder: (ctx, index) => ShoppingRow(
+                index,
+                ingredientShoppingList,
+              ),
               separatorBuilder: (_, index) => const Divider(
                 thickness: 1,
               ),
@@ -109,31 +118,39 @@ class ShoppingListScreen extends HookWidget {
 
 class ShoppingRow extends HookWidget {
   final int index;
+  final List<ShoppingItem> source;
+  final VoidCallback? onTap;
 
-  const ShoppingRow(this.index, {Key? key}) : super(key: key);
+  const ShoppingRow(this.index, this.source, {this.onTap, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final filteredShoppingList = useProvider(filteredShoppingListProvider);
-    final item = filteredShoppingList[index];
+    final item = source[index];
 
     final textStyle = Theme.of(context).textTheme.bodyText1;
     final textStyleStrikethrough = textStyle!.copyWith(decoration: TextDecoration.lineThrough);
 
     return InkWell(
-      onTap: () => context.read(shoppingListProvider.notifier).completeItem(item.id),
+      onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
         child: Text.rich(
           TextSpan(
             children: [
-              TextSpan(text: item.amount.toString()),
-              const WidgetSpan(
+              WidgetSpan(
                 child: SizedBox(
-                  width: 30,
+                  width: 37,
+                  child: Text(item.amount.toString()),
                 ),
               ),
-              TextSpan(text: item.name)
+              const WidgetSpan(
+                child: SizedBox(
+                  width: 10,
+                ),
+              ),
+              TextSpan(
+                text: item.name,
+              ),
             ],
             style: item.complete ? textStyleStrikethrough : textStyle,
           ),

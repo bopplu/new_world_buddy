@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:new_world_buddy/catalog/catalog_model.dart';
 import 'package:new_world_buddy/catalog/item.dart';
 import 'package:new_world_buddy/locations/location_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,6 +23,52 @@ final filteredShoppingListProvider = Provider<List<ShoppingItem>>((ref) {
   return shoppingList.where((item) => item.location == location).toList();
 });
 
+final ingredientShoppingListProvider = Provider<List<ShoppingItem>>((ref) {
+  final location = ref.watch(selectedLocationProvider);
+  final filteredShoppingList = ref.watch(filteredShoppingListProvider);
+  final itemList = ref.watch(fullItemListProvider);
+  final itemNames = itemList.map((item) => item.name);
+
+  final items = filteredShoppingList
+      .where((shoppingItem) => !shoppingItem.complete)
+      .where((shoppingItem) => itemNames.contains(shoppingItem.name))
+      .map((shoppingItem) => itemList.singleWhere((item) => shoppingItem.name == item.name));
+  final itemsWithIngredients = items.where((item) => item.ingredients != null && item.ingredients!.isNotEmpty);
+  final itemsWithIngredientsNames = itemsWithIngredients.map((item) => item.name);
+  final itemsWithoutIngredientsNames =
+      items.where((item) => item.ingredients == null || item.ingredients!.isEmpty).map((item) => item.name);
+  final shoppingItemsWithoutIngredients =
+      filteredShoppingList.where((shoppingItem) => itemsWithoutIngredientsNames.contains(shoppingItem.name));
+  final shoppingItemsWithIngredients =
+      filteredShoppingList.where((shoppingItem) => itemsWithIngredientsNames.contains(shoppingItem.name));
+
+  final Map<String, int> occurrenceMap = {};
+  itemsWithIngredients.expand((item) {
+    final shoppingItem = shoppingItemsWithIngredients.singleWhere((shoppingItem) => shoppingItem.name == item.name);
+    return [for (var i = 0; i < shoppingItem.amount; i++) ..._unwrapIngredients(itemList, item)];
+  }).forEach((ingr) => occurrenceMap.update(ingr.name, (value) => value += 1, ifAbsent: () => 1));
+
+  final shoppingListMap = {for (var item in shoppingItemsWithoutIngredients) item.name: item.amount};
+
+  for (var entry in occurrenceMap.entries) {
+    shoppingListMap.update(entry.key, (value) => value += entry.value, ifAbsent: () => entry.value);
+  }
+  final ingredientShoppingList = shoppingListMap.entries
+      .map((entry) => ShoppingItem(_uuid.v4(), entry.key, entry.value, location, false))
+      .toList();
+  ingredientShoppingList.sort((item, other) => item.name.compareTo(other.name));
+  return ingredientShoppingList;
+});
+
+Iterable<Item> _unwrapIngredients(Iterable<Item> items, Item itemToUnwrap) {
+  return itemToUnwrap.ingredients?.expand((ingredient) {
+        final item = items.singleWhere((element) => element.name == ingredient.name);
+        final itemsIngredients = [for (var i = 0; i < ingredient.quantity; i++) ..._unwrapIngredients(items, item)];
+        return itemsIngredients.isNotEmpty ? itemsIngredients : [for (var i = 0; i < ingredient.quantity; i++) item];
+      }) ??
+      [];
+}
+
 class ShoppingList extends StateNotifier<List<ShoppingItem>> {
   final SharedPreferences? _prefs;
   static const String prefKey = 'shoppingList';
@@ -32,7 +80,15 @@ class ShoppingList extends StateNotifier<List<ShoppingItem>> {
             []);
 
   void addItem(String name, int amount, String location) {
-    state = [...state, ShoppingItem(_uuid.v4(), name, amount, location, false)];
+    final ShoppingItem? existingItem = state.singleWhereOrNull((item) => item.name == name);
+    final others = state.where((element) => element.name != name);
+
+    final existingAmount = existingItem?.amount ?? 0;
+
+    final item = existingItem?.copyWith(amount: existingAmount + amount) ??
+        ShoppingItem(_uuid.v4(), name, amount, location, false);
+
+    state = [...others, item];
     saveItems();
   }
 

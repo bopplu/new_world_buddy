@@ -1,84 +1,515 @@
 {
   "items": [
     {
-      "name": "Flint",
-      "category": "ore",
-      "tier": 1
+      "category": "wood",
+      "name": "Aged Wood",
+      "tier": 2
     },
     {
-      "name": "Stone",
-      "category": "ore",
-      "tier": 1
-    },
-    {
-      "name": "Iron ore",
-      "category": "ore",
-      "tier": 1
-    },
-    {
-      "name": "Iron Ingot",
-      "category": "ore",
-      "tier": 2,
+      "name": "Bruising Crude Iron Armaments",
+      "category": "crates",
+      "tier": 1,
       "ingredients": [
         {
-          "name": "Iron ore",
-          "quantity": 4
+          "name": "Green Wood",
+          "quantity": 20
+        },
+        {
+          "name": "Iron Ore",
+          "quantity": 20
+        },
+        {
+          "name": "Rawhide",
+          "quantity": 10
         }
       ]
     },
     {
-      "name": "Green Wood",
-      "category": "wood",
-      "tier": 1
+      "name": "Bullwark Iron Armaments",
+      "category": "crates",
+      "tier": 1,
+      "ingredients": [
+        {
+          "name": "Coarse Leather",
+          "quantity": 5
+        },
+        {
+          "name": "Iron Ingot",
+          "quantity": 5
+        },
+        {
+          "name": "Timber",
+          "quantity": 10
+        }
+      ]
     },
     {
-      "name": "Mature Wood",
-      "category": "wood",
-      "tier": 2
-    },
-    {
-      "name": "Feather",
-      "category": "animals",
-      "tier": 1
-    },
-    {
-      "name": "Linen",
-      "category": "cloth",
-      "tier": 2
-    },
-    {
-      "name": "Fiber",
-      "category": "cloth",
-      "tier": 1
-    },
-    {
-      "name": "Coarse Leather",
-      "category": "animals",
+      "name": "Charcoal",
+      "category": "",
       "tier": 2,
+      "ingredients": [
+        {
+          "name": "Green Wood",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "name": "Cleaving Crude Iron Armaments",
+      "category": "crates",
+      "tier": 1,
+      "ingredients": [
+        {
+          "name": "Green Wood",
+          "quantity": 10
+        },
+        {
+          "name": "Iron Ore",
+          "quantity": 15
+        },
+        {
+          "name": "Rawhide",
+          "quantity": 25
+        }
+      ]
+    },
+    {
+      "name": "Cleaving Iron Armaments",
+      "category": "crates",
+      "tier": 1,
+      "ingredients": [
+        {
+          "name": "Coarse Leather",
+          "quantity": 10
+        },
+        {
+          "name": "Iron Ingot",
+          "quantity": 7
+        },
+        {
+          "name": "Timber",
+          "quantity": 8
+        }
+      ]
+    },
+    {
+      "category": "animals",
       "ingredients": [
         {
           "name": "Rawhide",
           "quantity": 4
         }
-      ]
+      ],
+      "name": "Coarse Leather",
+      "tier": 2
     },
     {
-      "name": "Rawhide",
-      "category": "animals",
+      "category": "",
+      "name": "Coarse Sandpaper",
+      "tier": 3
+    },
+    {
+      "name": "Crossweave",
+      "category": "",
+      "tier": 1,
+      "ingredients": []
+    },
+    {
+      "category": "crates",
+      "ingredients": [
+        {
+          "name": "Coarse Leather",
+          "quantity": 8
+        },
+        {
+          "name": "Iron Ingot",
+          "quantity": 5
+        },
+        {
+          "name": "Timber",
+          "quantity": 12
+        }
+      ],
+      "name": "Crushing Iron Armaments",
       "tier": 1
     },
     {
-      "name": "Stone Brick",
+      "category": "animals",
+      "name": "Feather",
+      "tier": 1
+    },
+    {
+      "category": "cloth",
+      "name": "Fibers",
+      "tier": 1
+    },
+    {
       "category": "ore",
-      "tier": 2,
+      "name": "Flint",
+      "tier": 1
+    },
+    {
+      "category": "wood",
+      "name": "Green Wood",
+      "tier": 1
+    },
+    {
+      "name": "Hardened Iron Armaments",
+      "category": "crates",
+      "tier": 1,
       "ingredients": [
         {
-          "name": "Stone Block",
+          "name": "Coarse Leather",
+          "quantity": 5
+        },
+        {
+          "name": "Iron Ingot",
+          "quantity": 10
+        },
+        {
+          "name": "Linen",
+          "quantity": 10
+        }
+      ]
+    },
+    {
+      "name": "Hardened Iron Armor",
+      "category": "crates",
+      "tier": 1,
+      "ingredients": [
+        {
+          "name": "Coarse Leather",
+          "quantity": 5
+        },
+        {
+          "name": "Iron Ingot",
+          "quantity": 10
+        },
+        {
+          "name": "Linen",
+          "quantity": 10
+        }
+      ]
+    },
+    {
+      "name": "Impaling Iron Armaments",
+      "category": "crates",
+      "tier": 1,
+      "ingredients": [
+        {
+          "name": "Coarse Leather",
+          "quantity": 12
+        },
+        {
+          "name": "Iron Ingot",
           "quantity": 4
         },
         {
-          "name": "Sandpaper",
+          "name": "Timber",
+          "quantity": 4
+        }
+      ]
+    },
+    {
+      "name": "Impenetrable Crude Iron Armor",
+      "category": "crates",
+      "tier": 1,
+      "ingredients": [
+        {
+          "name": "Fibers",
+          "quantity": 26
+        },
+        {
+          "name": "Iron Ore",
+          "quantity": 12
+        },
+        {
+          "name": "Rawhide",
+          "quantity": 12
+        }
+      ]
+    },
+    {
+      "category": "crates",
+      "ingredients": [
+        {
+          "name": "Coarse Leather",
+          "quantity": 13
+        },
+        {
+          "name": "Iron Ingot",
+          "quantity": 13
+        },
+        {
+          "name": "Linen",
+          "quantity": 14
+        }
+      ],
+      "name": "Impenetrable Iron Armor",
+      "tier": 1
+    },
+    {
+      "category": "ore",
+      "ingredients": [
+        {
+          "name": "Iron Ore",
+          "quantity": 4
+        }
+      ],
+      "name": "Iron Ingot",
+      "tier": 2
+    },
+    {
+      "category": "ore",
+      "name": "Iron Ore",
+      "tier": 1
+    },
+    {
+      "category": "cloth",
+      "name": "Linen",
+      "tier": 2,
+      "ingredients": [
+        {
+          "name": "Fibers",
+          "quantity": 4
+        }
+      ]
+    },
+    {
+      "category": "wood",
+      "ingredients": [
+        {
+          "name": "Aged Wood",
+          "quantity": 4
+        },
+        {
+          "name": "Coarse Sandpaper",
           "quantity": 1
+        },
+        {
+          "name": "Timber",
+          "quantity": 2
+        }
+      ],
+      "name": "Lumber",
+      "tier": 3
+    },
+    {
+      "category": "crates",
+      "ingredients": [
+        {
+          "name": "Green Wood",
+          "quantity": 40
+        },
+        {
+          "name": "Iron Ore",
+          "quantity": 25
+        },
+        {
+          "name": "Rawhide",
+          "quantity": 25
+        }
+      ],
+      "name": "Pillaging Crude Iron Armaments",
+      "tier": 1
+    },
+    {
+      "category": "crates",
+      "ingredients": [
+        {
+          "name": "Coarse Leather",
+          "quantity": 8
+        },
+        {
+          "name": "Iron Ingot",
+          "quantity": 10
+        },
+        {
+          "name": "Timber",
+          "quantity": 22
+        }
+      ],
+      "name": "Pillaging Iron Armaments",
+      "tier": 1
+    },
+    {
+      "name": "Plundering Crude Iron Armaments",
+      "category": "crates",
+      "tier": 1,
+      "ingredients": [
+        {
+          "name": "Green Wood",
+          "quantity": 10
+        },
+        {
+          "name": "Iron Ore",
+          "quantity": 10
+        },
+        {
+          "name": "Rawhide",
+          "quantity": 10
+        }
+      ]
+    },
+    {
+      "category": "animals",
+      "name": "Rawhide",
+      "tier": 1
+    },
+    {
+      "category": "crates",
+      "ingredients": [
+        {
+          "name": "Green Wood",
+          "quantity": 15
+        },
+        {
+          "name": "Iron Ore",
+          "quantity": 50
+        },
+        {
+          "name": "Rawhide",
+          "quantity": 25
+        }
+      ],
+      "name": "Reaving Crude Iron Armaments",
+      "tier": 1
+    },
+    {
+      "name": "Rugged Crude Iron Armaments",
+      "category": "crates",
+      "tier": 1,
+      "ingredients": [
+        {
+          "name": "Fibers",
+          "quantity": 10
+        },
+        {
+          "name": "Iron Ore",
+          "quantity": 14
+        },
+        {
+          "name": "Rawhide",
+          "quantity": 6
+        }
+      ]
+    },
+    {
+      "name": "Sand Flux",
+      "category": "",
+      "tier": 3,
+      "ingredients": []
+    },
+    {
+      "name": "Sateen",
+      "category": "cloth",
+      "tier": 3,
+      "ingredients": [
+        {
+          "name": "Crossweave",
+          "quantity": 1
+        },
+        {
+          "name": "Linen",
+          "quantity": 4
+        }
+      ]
+    },
+    {
+      "name": "Steel Ingot",
+      "category": "ore",
+      "tier": 3,
+      "ingredients": [
+        {
+          "name": "Charcoal",
+          "quantity": 2
+        },
+        {
+          "name": "Iron Ingot",
+          "quantity": 3
+        },
+        {
+          "name": "Sand Flux",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "category": "ore",
+      "name": "Stone",
+      "tier": 1
+    },
+    {
+      "category": "ore",
+      "name": "Stone Block",
+      "tier": 1
+    },
+    {
+      "category": "ore",
+      "ingredients": [
+        {
+          "name": "Coarse Sandpaper",
+          "quantity": 1
+        },
+        {
+          "name": "Stone Block",
+          "quantity": 4
+        }
+      ],
+      "name": "Stone Brick",
+      "tier": 2
+    },
+    {
+      "category": "wood",
+      "ingredients": [
+        {
+          "name": "Green Wood",
+          "quantity": 4
+        }
+      ],
+      "name": "Timber",
+      "tier": 2
+    },
+    {
+      "name": "Wyrdwood",
+      "category": "wood",
+      "tier": 4
+    },
+    {
+      "name": "Wyrdwood Planks",
+      "category": "wood",
+      "tier": 4,
+      "ingredients": [
+        {
+          "name": "Coarse Sandpaper",
+          "quantity": 1
+        },
+        {
+          "name": "Lumber",
+          "quantity": 2
+        },
+        {
+          "name": "Wyrdwood",
+          "quantity": 6
+        }
+      ]
+    },
+    {
+      "name": "Stalwart Crude Iron Armor",
+      "category": "crates",
+      "tier": 1,
+      "ingredients": [
+        {
+          "name": "Iron Ore",
+          "quantity": 18
+        },
+        {
+          "name": "Rawhide",
+          "quantity": 14
+        },
+        {
+          "name": "Fibers",
+          "quantity": 18
         }
       ]
     }

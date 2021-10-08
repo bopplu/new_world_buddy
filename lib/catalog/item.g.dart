@@ -24,6 +24,7 @@ _$_Item _$$_ItemFromJson(Map<String, dynamic> json) => _$_Item(
       (json['ingredients'] as List<dynamic>?)
           ?.map((e) => Ingredient.fromJson(e as Map<String, dynamic>))
           .toList(),
+      json['hidden'] as bool?,
     );
 
 Map<String, dynamic> _$$_ItemToJson(_$_Item instance) => <String, dynamic>{
@@ -31,6 +32,7 @@ Map<String, dynamic> _$$_ItemToJson(_$_Item instance) => <String, dynamic>{
       'category': instance.category,
       'tier': instance.tier,
       'ingredients': instance.ingredients?.map((e) => e.toJson()).toList(),
+      'hidden': instance.hidden,
     };
 
 _$_ItemCategory _$$_ItemCategoryFromJson(Map<String, dynamic> json) =>

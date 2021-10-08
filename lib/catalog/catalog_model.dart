@@ -21,8 +21,13 @@ final selectedCategory = StateProvider<ItemCategory?>((ref) => null);
 final itemsByCategory = Provider<AsyncValue<List<Item>>>((ref) {
   final category = ref.watch(selectedCategory);
   return ref.watch(futureItemProvider).whenData((list) {
+    list.sort((a, b) => a.tier.compareTo(b.tier));
     return list.where((item) => item.category.toLowerCase() == category.state?.name.toLowerCase()).toList();
   });
+});
+
+final fullItemListProvider = Provider<List<Item>>((ref) {
+  return ref.watch(futureItemProvider).maybeWhen(data: (list) => list, orElse: () => []);
 });
 
 class CategoryCard extends Gcard {

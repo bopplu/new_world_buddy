@@ -12,7 +12,7 @@ class ItemList with _$ItemList {
 
 @freezed
 class Item with _$Item {
-  const factory Item(String name, String category, int tier, List<Ingredient>? ingredients) = _Item;
+  const factory Item(String name, String category, int tier, List<Ingredient>? ingredients, bool? hidden) = _Item;
 
   factory Item.fromJson(Map<String, dynamic> json) => _$ItemFromJson(json);
 }

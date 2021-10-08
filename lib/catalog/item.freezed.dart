@@ -163,13 +163,14 @@ Item _$ItemFromJson(Map<String, dynamic> json) {
 class _$ItemTearOff {
   const _$ItemTearOff();
 
-  _Item call(
-      String name, String category, int tier, List<Ingredient>? ingredients) {
+  _Item call(String name, String category, int tier,
+      List<Ingredient>? ingredients, bool? hidden) {
     return _Item(
       name,
       category,
       tier,
       ingredients,
+      hidden,
     );
   }
 
@@ -187,6 +188,7 @@ mixin _$Item {
   String get category => throw _privateConstructorUsedError;
   int get tier => throw _privateConstructorUsedError;
   List<Ingredient>? get ingredients => throw _privateConstructorUsedError;
+  bool? get hidden => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -198,7 +200,11 @@ abstract class $ItemCopyWith<$Res> {
   factory $ItemCopyWith(Item value, $Res Function(Item) then) =
       _$ItemCopyWithImpl<$Res>;
   $Res call(
-      {String name, String category, int tier, List<Ingredient>? ingredients});
+      {String name,
+      String category,
+      int tier,
+      List<Ingredient>? ingredients,
+      bool? hidden});
 }
 
 /// @nodoc
@@ -215,6 +221,7 @@ class _$ItemCopyWithImpl<$Res> implements $ItemCopyWith<$Res> {
     Object? category = freezed,
     Object? tier = freezed,
     Object? ingredients = freezed,
+    Object? hidden = freezed,
   }) {
     return _then(_value.copyWith(
       name: name == freezed
@@ -233,6 +240,10 @@ class _$ItemCopyWithImpl<$Res> implements $ItemCopyWith<$Res> {
           ? _value.ingredients
           : ingredients // ignore: cast_nullable_to_non_nullable
               as List<Ingredient>?,
+      hidden: hidden == freezed
+          ? _value.hidden
+          : hidden // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -243,7 +254,11 @@ abstract class _$ItemCopyWith<$Res> implements $ItemCopyWith<$Res> {
       __$ItemCopyWithImpl<$Res>;
   @override
   $Res call(
-      {String name, String category, int tier, List<Ingredient>? ingredients});
+      {String name,
+      String category,
+      int tier,
+      List<Ingredient>? ingredients,
+      bool? hidden});
 }
 
 /// @nodoc
@@ -261,6 +276,7 @@ class __$ItemCopyWithImpl<$Res> extends _$ItemCopyWithImpl<$Res>
     Object? category = freezed,
     Object? tier = freezed,
     Object? ingredients = freezed,
+    Object? hidden = freezed,
   }) {
     return _then(_Item(
       name == freezed
@@ -279,6 +295,10 @@ class __$ItemCopyWithImpl<$Res> extends _$ItemCopyWithImpl<$Res>
           ? _value.ingredients
           : ingredients // ignore: cast_nullable_to_non_nullable
               as List<Ingredient>?,
+      hidden == freezed
+          ? _value.hidden
+          : hidden // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -286,7 +306,8 @@ class __$ItemCopyWithImpl<$Res> extends _$ItemCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_Item implements _Item {
-  const _$_Item(this.name, this.category, this.tier, this.ingredients);
+  const _$_Item(
+      this.name, this.category, this.tier, this.ingredients, this.hidden);
 
   factory _$_Item.fromJson(Map<String, dynamic> json) => _$$_ItemFromJson(json);
 
@@ -298,10 +319,12 @@ class _$_Item implements _Item {
   final int tier;
   @override
   final List<Ingredient>? ingredients;
+  @override
+  final bool? hidden;
 
   @override
   String toString() {
-    return 'Item(name: $name, category: $category, tier: $tier, ingredients: $ingredients)';
+    return 'Item(name: $name, category: $category, tier: $tier, ingredients: $ingredients, hidden: $hidden)';
   }
 
   @override
@@ -317,7 +340,9 @@ class _$_Item implements _Item {
                 const DeepCollectionEquality().equals(other.tier, tier)) &&
             (identical(other.ingredients, ingredients) ||
                 const DeepCollectionEquality()
-                    .equals(other.ingredients, ingredients)));
+                    .equals(other.ingredients, ingredients)) &&
+            (identical(other.hidden, hidden) ||
+                const DeepCollectionEquality().equals(other.hidden, hidden)));
   }
 
   @override
@@ -326,7 +351,8 @@ class _$_Item implements _Item {
       const DeepCollectionEquality().hash(name) ^
       const DeepCollectionEquality().hash(category) ^
       const DeepCollectionEquality().hash(tier) ^
-      const DeepCollectionEquality().hash(ingredients);
+      const DeepCollectionEquality().hash(ingredients) ^
+      const DeepCollectionEquality().hash(hidden);
 
   @JsonKey(ignore: true)
   @override
@@ -341,7 +367,7 @@ class _$_Item implements _Item {
 
 abstract class _Item implements Item {
   const factory _Item(String name, String category, int tier,
-      List<Ingredient>? ingredients) = _$_Item;
+      List<Ingredient>? ingredients, bool? hidden) = _$_Item;
 
   factory _Item.fromJson(Map<String, dynamic> json) = _$_Item.fromJson;
 
@@ -353,6 +379,8 @@ abstract class _Item implements Item {
   int get tier => throw _privateConstructorUsedError;
   @override
   List<Ingredient>? get ingredients => throw _privateConstructorUsedError;
+  @override
+  bool? get hidden => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$ItemCopyWith<_Item> get copyWith => throw _privateConstructorUsedError;

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:collection/src/iterable_extensions.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:new_world_buddy/catalog/category_screen.dart';
@@ -28,6 +29,10 @@ final itemsByCategory = Provider<AsyncValue<List<Item>>>((ref) {
 
 final fullItemListProvider = Provider<List<Item>>((ref) {
   return ref.watch(futureItemProvider).maybeWhen(data: (list) => list, orElse: () => []);
+});
+
+final itemProvider = Provider.family<Item?, String>((ref, name) {
+  return ref.watch(fullItemListProvider).singleWhereOrNull((element) => element.name == name);
 });
 
 class CategoryCard extends Gcard {

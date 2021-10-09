@@ -6,6 +6,7 @@ import 'package:new_world_buddy/catalog/catalog_model.dart';
 import 'package:new_world_buddy/catalog/catalog_screen.dart';
 import 'package:new_world_buddy/catalog/item.dart';
 import 'package:new_world_buddy/locations/location_provider.dart';
+import 'package:new_world_buddy/shopping/item_detail_screen.dart';
 import 'package:new_world_buddy/shopping/shopping_list_model.dart';
 
 enum ShoppingListActions { refresh, clear, clearDone }
@@ -18,7 +19,7 @@ class ShoppingListScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final filteredShoppingList = useProvider(filteredShoppingListProvider);
-    final ingredientShoppingList = useProvider(ingredientShoppingListProvider);
+    final ingredientShoppingList = useProvider(ingredientListProvider);
     final locationList = useProvider(locationListProvider);
     final selectedLocation = useProvider(selectedLocationProvider);
 
@@ -88,7 +89,13 @@ class ShoppingListScreen extends HookWidget {
               itemBuilder: (ctx, index) => ShoppingRow(
                 index,
                 filteredShoppingList,
-                onTap: () => ctx.read(shoppingListProvider.notifier).completeItem(filteredShoppingList[index].id),
+                onTap: () {
+                  ctx.read(selectedItemIdProvider).state = filteredShoppingList[index].id;
+                  Navigator.pushNamed(ctx, ItemDetailScreen.route);
+                },
+                onLongPress: () {
+                  ctx.read(shoppingListProvider.notifier).completeItem(filteredShoppingList[index].id);
+                },
               ),
               separatorBuilder: (_, index) => const Divider(
                 thickness: 1,
@@ -130,8 +137,9 @@ class ShoppingRow extends HookWidget {
   final int index;
   final List<ShoppingItem> source;
   final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
 
-  const ShoppingRow(this.index, this.source, {this.onTap, Key? key}) : super(key: key);
+  const ShoppingRow(this.index, this.source, {this.onTap, this.onLongPress, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -142,6 +150,7 @@ class ShoppingRow extends HookWidget {
 
     return InkWell(
       onTap: onTap,
+      onLongPress: onLongPress,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
         child: Text.rich(

@@ -63,12 +63,14 @@ _$_Ingredient _$$_IngredientFromJson(Map<String, dynamic> json) =>
     _$_Ingredient(
       json['name'] as String,
       json['quantity'] as int,
+      completedAmount: json['completedAmount'] as int? ?? 0,
     );
 
 Map<String, dynamic> _$$_IngredientToJson(_$_Ingredient instance) =>
     <String, dynamic>{
       'name': instance.name,
       'quantity': instance.quantity,
+      'completedAmount': instance.completedAmount,
     };
 
 _$_ShoppingItem _$$_ShoppingItemFromJson(Map<String, dynamic> json) =>
@@ -77,7 +79,13 @@ _$_ShoppingItem _$$_ShoppingItemFromJson(Map<String, dynamic> json) =>
       json['name'] as String,
       json['amount'] as int,
       json['location'] as String,
-      json['complete'] as bool,
+      completedAmount: json['completedAmount'] as int? ?? 0,
+      complete: json['complete'] as bool? ?? false,
+      factor: json['factor'] as int? ?? 1,
+      ingredients: (json['ingredients'] as List<dynamic>?)
+              ?.map((e) => ShoppingItem.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
     );
 
 Map<String, dynamic> _$$_ShoppingItemToJson(_$_ShoppingItem instance) =>
@@ -86,7 +94,10 @@ Map<String, dynamic> _$$_ShoppingItemToJson(_$_ShoppingItem instance) =>
       'name': instance.name,
       'amount': instance.amount,
       'location': instance.location,
+      'completedAmount': instance.completedAmount,
       'complete': instance.complete,
+      'factor': instance.factor,
+      'ingredients': instance.ingredients.map((e) => e.toJson()).toList(),
     };
 
 _$_LocationList _$$_LocationListFromJson(Map<String, dynamic> json) =>

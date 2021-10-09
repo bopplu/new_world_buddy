@@ -25,6 +25,25 @@
       ]
     },
     {
+      "name": "Bruising Iron Armaments",
+      "category": "crates",
+      "tier": 1,
+      "ingredients": [
+        {
+          "name": "Coarse Leather",
+          "quantity": 5
+        },
+        {
+          "name": "Iron Ingot",
+          "quantity": 15
+        },
+        {
+          "name": "Timber",
+          "quantity": 5
+        }
+      ]
+    },
+    {
       "name": "Bullwark Iron Armaments",
       "category": "crates",
       "tier": 1,
@@ -147,6 +166,25 @@
       "category": "ore",
       "name": "Flint",
       "tier": 1
+    },
+    {
+      "name": "Gashing Crude Iron Armaments",
+      "category": "crates",
+      "tier": 1,
+      "ingredients": [
+        {
+          "name": "Green Wood",
+          "quantity": 30
+        },
+        {
+          "name": "Iron Ore",
+          "quantity": 30
+        },
+        {
+          "name": "Rawhide",
+          "quantity": 30
+        }
+      ]
     },
     {
       "category": "wood",
@@ -395,6 +433,21 @@
       ]
     },
     {
+      "name": "Rugged Leather",
+      "category": "animals",
+      "tier": 3,
+      "ingredients": [
+        {
+          "name": "Coarse Leather",
+          "quantity": 4
+        },
+        {
+          "name": "Tannin",
+          "quantity": 1
+        }
+      ]
+    },
+    {
       "name": "Sand Flux",
       "category": "",
       "tier": 3,
@@ -412,6 +465,44 @@
         {
           "name": "Linen",
           "quantity": 4
+        }
+      ]
+    },
+    {
+      "name": "Stalwart Crude Iron Armor",
+      "category": "crates",
+      "tier": 1,
+      "ingredients": [
+        {
+          "name": "Fibers",
+          "quantity": 18
+        },
+        {
+          "name": "Iron Ore",
+          "quantity": 18
+        },
+        {
+          "name": "Rawhide",
+          "quantity": 14
+        }
+      ]
+    },
+    {
+      "name": "Stalwart Iron Armor",
+      "category": "crates",
+      "tier": 1,
+      "ingredients": [
+        {
+          "name": "Coarse Leather",
+          "quantity": 10
+        },
+        {
+          "name": "Iron Ingot",
+          "quantity": 5
+        },
+        {
+          "name": "Linen",
+          "quantity": 10
         }
       ]
     },
@@ -442,7 +533,13 @@
     {
       "category": "ore",
       "name": "Stone Block",
-      "tier": 1
+      "tier": 1,
+      "ingredients": [
+        {
+          "name": "Stone",
+          "quantity": 4
+        }
+      ]
     },
     {
       "category": "ore",
@@ -458,6 +555,12 @@
       ],
       "name": "Stone Brick",
       "tier": 2
+    },
+    {
+      "name": "Tannin",
+      "category": "",
+      "tier": 1,
+      "ingredients": []
     },
     {
       "category": "wood",
@@ -495,44 +598,79 @@
       ]
     },
     {
-      "name": "Stalwart Crude Iron Armor",
+      "name": "Ransacking Crude Iron Armaments",
       "category": "crates",
       "tier": 1,
       "ingredients": [
         {
           "name": "Iron Ore",
-          "quantity": 18
+          "quantity": 10
+        },
+        {
+          "name": "Green Wood",
+          "quantity": 20
         },
         {
           "name": "Rawhide",
+          "quantity": 20
+        }
+      ]
+    },
+    {
+      "name": "Crushing Crude Iron Armaments",
+      "category": "crates",
+      "tier": 1,
+      "ingredients": [
+        {
+          "name": "Iron Ore",
+          "quantity": 20
+        },
+        {
+          "name": "Green Wood",
+          "quantity": 15
+        },
+        {
+          "name": "Rawhide",
+          "quantity": 15
+        }
+      ]
+    },
+    {
+      "name": "Ransacking Iron Armaments",
+      "category": "crates",
+      "tier": 1,
+      "ingredients": [
+        {
+          "name": "Iron Ingot",
+          "quantity": 12
+        },
+        {
+          "name": "Timber",
+          "quantity": 16
+        },
+        {
+          "name": "Coarse Leather",
+          "quantity": 12
+        }
+      ]
+    },
+    {
+      "name": "Impaling Crude Iron Armaments",
+      "category": "crates",
+      "tier": 1,
+      "ingredients": [
+        {
+          "name": "Iron Ore",
+          "quantity": 8
+        },
+        {
+          "name": "Green Wood",
           "quantity": 14
         },
         {
-          "name": "Fibers",
-          "quantity": 18
+          "name": "Rawhide",
+          "quantity": 8
         }
-      ]
-    },
-    {
-      "name": "Rugged Leather",
-      "category": "animals",
-      "tier": 3,
-      "ingredients": [
-        {
-          "name": "Coarse Leather",
-          "quantity": 4
-        },
-        {
-          "name": "Tannin",
-          "quantity": 1
-        }
-      ]
-    },
-    {
-      "name": "Tannin",
-      "category": "",
-      "tier": 1,
-      "ingredients": [
       ]
     }
   ]

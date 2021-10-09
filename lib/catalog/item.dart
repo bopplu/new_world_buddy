@@ -33,14 +33,18 @@ class ItemCategoryList with _$ItemCategoryList {
 
 @freezed
 class Ingredient with _$Ingredient {
-  const factory Ingredient(String name, int quantity) = _Ingredient;
+  const factory Ingredient(String name, int quantity, {@Default(0) int completedAmount}) = _Ingredient;
 
   factory Ingredient.fromJson(Map<String, dynamic> json) => _$IngredientFromJson(json);
 }
 
 @freezed
 class ShoppingItem with _$ShoppingItem {
-  const factory ShoppingItem(String id, String name, int amount, String location, bool complete) = _ShoppingItem;
+  const factory ShoppingItem(String id, String name, int amount, String location,
+      {@Default(0) int completedAmount,
+      @Default(false) bool complete,
+      @Default(1) int factor,
+      @Default([]) List<ShoppingItem> ingredients}) = _ShoppingItem;
 
   factory ShoppingItem.fromJson(Map<String, dynamic> json) => _$ShoppingItemFromJson(json);
 }

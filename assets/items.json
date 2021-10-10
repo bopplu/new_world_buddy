@@ -6,6 +6,12 @@
       "tier": 2
     },
     {
+      "name": "Briar Buds",
+      "category": "",
+      "tier": 1,
+      "ingredients": []
+    },
+    {
       "name": "Bruising Crude Iron Armaments",
       "category": "crates",
       "tier": 1,
@@ -44,6 +50,25 @@
       ]
     },
     {
+      "name": "Bullwark Crude Iron Armaments",
+      "category": "crates",
+      "tier": 1,
+      "ingredients": [
+        {
+          "name": "Green Wood",
+          "quantity": 3
+        },
+        {
+          "name": "Iron Ore",
+          "quantity": 15
+        },
+        {
+          "name": "Rawhide",
+          "quantity": 12
+        }
+      ]
+    },
+    {
       "name": "Bullwark Iron Armaments",
       "category": "crates",
       "tier": 1,
@@ -59,25 +84,6 @@
         {
           "name": "Timber",
           "quantity": 10
-        }
-      ]
-    },
-    {
-      "name": "Bullwark Crude Iron Armaments",
-      "category": "crates",
-      "tier": 1,
-      "ingredients": [
-        {
-          "name": "Iron Ore",
-          "quantity": 15
-        },
-        {
-          "name": "Green Wood",
-          "quantity": 3
-        },
-        {
-          "name": "Rawhide",
-          "quantity": 12
         }
       ]
     },
@@ -147,10 +153,93 @@
       "tier": 3
     },
     {
+      "name": "Common Focus Potion",
+      "category": "potions",
+      "tier": 2,
+      "ingredients": [
+        {
+          "name": "Tier 2 Water Reagents",
+          "quantity": 1
+        },
+        {
+          "name": "Water",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "name": "Common Health Potion",
+      "category": "potions",
+      "tier": 2,
+      "ingredients": [
+        {
+          "name": "Tier 2 Medicinal Reagents",
+          "quantity": 1
+        },
+        {
+          "name": "Water",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "name": "Common Mana Potion",
+      "category": "potions",
+      "tier": 2,
+      "ingredients": [
+        {
+          "name": "Tier 2 Magical Reagents",
+          "quantity": 1
+        },
+        {
+          "name": "Water",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "name": "Common Regeneration Potion",
+      "category": "potions",
+      "tier": 2,
+      "ingredients": [
+        {
+          "name": "Life Reagents",
+          "quantity": 1
+        },
+        {
+          "name": "Tier 2 Medicinal Reagents",
+          "quantity": 1
+        },
+        {
+          "name": "Water",
+          "quantity": 1
+        }
+      ]
+    },
+    {
       "name": "Crossweave",
       "category": "",
       "tier": 1,
       "ingredients": []
+    },
+    {
+      "name": "Crushing Crude Iron Armaments",
+      "category": "crates",
+      "tier": 1,
+      "ingredients": [
+        {
+          "name": "Green Wood",
+          "quantity": 15
+        },
+        {
+          "name": "Iron Ore",
+          "quantity": 20
+        },
+        {
+          "name": "Rawhide",
+          "quantity": 15
+        }
+      ]
     },
     {
       "category": "crates",
@@ -249,6 +338,31 @@
       ]
     },
     {
+      "name": "Hyssop",
+      "category": "",
+      "tier": 1,
+      "ingredients": []
+    },
+    {
+      "name": "Impaling Crude Iron Armaments",
+      "category": "crates",
+      "tier": 1,
+      "ingredients": [
+        {
+          "name": "Green Wood",
+          "quantity": 14
+        },
+        {
+          "name": "Iron Ore",
+          "quantity": 8
+        },
+        {
+          "name": "Rawhide",
+          "quantity": 8
+        }
+      ]
+    },
+    {
       "name": "Impaling Iron Armaments",
       "category": "crates",
       "tier": 1,
@@ -320,6 +434,12 @@
       "category": "ore",
       "name": "Iron Ore",
       "tier": 1
+    },
+    {
+      "name": "Life Reagents",
+      "category": "",
+      "tier": 2,
+      "ingredients": []
     },
     {
       "category": "cloth",
@@ -409,6 +529,44 @@
       ]
     },
     {
+      "name": "Ransacking Crude Iron Armaments",
+      "category": "crates",
+      "tier": 1,
+      "ingredients": [
+        {
+          "name": "Green Wood",
+          "quantity": 20
+        },
+        {
+          "name": "Iron Ore",
+          "quantity": 10
+        },
+        {
+          "name": "Rawhide",
+          "quantity": 20
+        }
+      ]
+    },
+    {
+      "name": "Ransacking Iron Armaments",
+      "category": "crates",
+      "tier": 1,
+      "ingredients": [
+        {
+          "name": "Coarse Leather",
+          "quantity": 12
+        },
+        {
+          "name": "Iron Ingot",
+          "quantity": 12
+        },
+        {
+          "name": "Timber",
+          "quantity": 16
+        }
+      ]
+    },
+    {
       "category": "animals",
       "name": "Rawhide",
       "tier": 1
@@ -486,6 +644,31 @@
           "quantity": 4
         }
       ]
+    },
+    {
+      "name": "Silk",
+      "category": "cloth",
+      "tier": 4,
+      "ingredients": [
+        {
+          "name": "Crossweave",
+          "quantity": 1
+        },
+        {
+          "name": "Sateen",
+          "quantity": 2
+        },
+        {
+          "name": "Silk Threads",
+          "quantity": 6
+        }
+      ]
+    },
+    {
+      "name": "Silk Threads",
+      "category": "cloth",
+      "tier": 4,
+      "ingredients": []
     },
     {
       "name": "Stalwart Crude Iron Armor",
@@ -576,9 +759,46 @@
       "tier": 2
     },
     {
+      "name": "Stout Iron Armor",
+      "category": "crates",
+      "tier": 1,
+      "ingredients": [
+        {
+          "name": "Coarse Leather",
+          "quantity": 10
+        },
+        {
+          "name": "Iron Ingot",
+          "quantity": 10
+        },
+        {
+          "name": "Linen",
+          "quantity": 5
+        }
+      ]
+    },
+    {
       "name": "Tannin",
       "category": "",
       "tier": 1,
+      "ingredients": []
+    },
+    {
+      "name": "Tier 2 Magical Reagents",
+      "category": "",
+      "tier": 2,
+      "ingredients": []
+    },
+    {
+      "name": "Tier 2 Medicinal Reagents",
+      "category": "",
+      "tier": 2,
+      "ingredients": []
+    },
+    {
+      "name": "Tier 2 Water Reagents",
+      "category": "",
+      "tier": 2,
       "ingredients": []
     },
     {
@@ -591,6 +811,80 @@
       ],
       "name": "Timber",
       "tier": 2
+    },
+    {
+      "name": "Toughened Crude Iron Armor",
+      "category": "crates",
+      "tier": 1,
+      "ingredients": [
+        {
+          "name": "Fibers",
+          "quantity": 12
+        },
+        {
+          "name": "Iron Ore",
+          "quantity": 9
+        },
+        {
+          "name": "Rawhide",
+          "quantity": 9
+        }
+      ]
+    },
+    {
+      "name": "Unyielding Iron Armor",
+      "category": "crates",
+      "tier": 1,
+      "ingredients": [
+        {
+          "name": "Coarse Leather",
+          "quantity": 10
+        },
+        {
+          "name": "Iron Ingot",
+          "quantity": 10
+        },
+        {
+          "name": "Linen",
+          "quantity": 5
+        }
+      ]
+    },
+    {
+      "name": "Water",
+      "category": "potions",
+      "tier": 1,
+      "ingredients": []
+    },
+    {
+      "name": "Weak Health Potion",
+      "category": "potions",
+      "tier": 1,
+      "ingredients": [
+        {
+          "name": "Hyssop",
+          "quantity": 1
+        },
+        {
+          "name": "Water",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "name": "Weak Mana Potion",
+      "category": "potions",
+      "tier": 1,
+      "ingredients": [
+        {
+          "name": "Briar Buds",
+          "quantity": 1
+        },
+        {
+          "name": "Water",
+          "quantity": 1
+        }
+      ]
     },
     {
       "name": "Wyrdwood",
@@ -617,116 +911,21 @@
       ]
     },
     {
-      "name": "Ransacking Crude Iron Armaments",
+      "name": "Cleaving Crude Iron Armaments",
       "category": "crates",
       "tier": 1,
       "ingredients": [
         {
           "name": "Iron Ore",
-          "quantity": 10
-        },
-        {
-          "name": "Green Wood",
-          "quantity": 20
-        },
-        {
-          "name": "Rawhide",
-          "quantity": 20
-        }
-      ]
-    },
-    {
-      "name": "Crushing Crude Iron Armaments",
-      "category": "crates",
-      "tier": 1,
-      "ingredients": [
-        {
-          "name": "Iron Ore",
-          "quantity": 20
-        },
-        {
-          "name": "Green Wood",
           "quantity": 15
         },
         {
-          "name": "Rawhide",
-          "quantity": 15
-        }
-      ]
-    },
-    {
-      "name": "Ransacking Iron Armaments",
-      "category": "crates",
-      "tier": 1,
-      "ingredients": [
-        {
-          "name": "Iron Ingot",
-          "quantity": 12
-        },
-        {
-          "name": "Timber",
-          "quantity": 16
-        },
-        {
-          "name": "Coarse Leather",
-          "quantity": 12
-        }
-      ]
-    },
-    {
-      "name": "Impaling Crude Iron Armaments",
-      "category": "crates",
-      "tier": 1,
-      "ingredients": [
-        {
-          "name": "Iron Ore",
-          "quantity": 8
-        },
-        {
           "name": "Green Wood",
-          "quantity": 14
+          "quantity": 10
         },
         {
           "name": "Rawhide",
-          "quantity": 8
-        }
-      ]
-    },
-    {
-      "name": "Unyielding Iron Armor",
-      "category": "crates",
-      "tier": 1,
-      "ingredients": [
-        {
-          "name": "Iron Ingot",
-          "quantity": 10
-        },
-        {
-          "name": "Coarse Leather",
-          "quantity": 10
-        },
-        {
-          "name": "Linen",
-          "quantity": 5
-        }
-      ]
-    },
-    {
-      "name": "Stout Iron Armor",
-      "category": "crates",
-      "tier": 1,
-      "ingredients": [
-        {
-          "name": "Iron Ingot",
-          "quantity": 10
-        },
-        {
-          "name": "Coarse Leather",
-          "quantity": 10
-        },
-        {
-          "name": "Linen",
-          "quantity": 5
+          "quantity": 25
         }
       ]
     }

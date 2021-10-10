@@ -76,6 +76,30 @@ class AddProgressScreen extends HookWidget {
   }
 }
 
+class AddProgressIngredientListScreen extends HookWidget {
+  static const String route = "/add-progress-ingredient-list";
+
+  const AddProgressIngredientListScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final _amount = useProvider(zeroAmountProvider);
+    final selectedItem = useProvider(progressIngredientItemProvider);
+    final location = useProvider(selectedLocationProvider);
+
+    return AddWidget(
+      'Add Progress to ${selectedItem?.name}',
+      zeroAmountProvider,
+      doneAction: () {
+        Navigator.of(context).pop();
+        context
+            .read(shoppingListProvider.notifier)
+            .updateAllUntilDepleted(selectedItem!.name, location, completedAmount: _amount);
+      },
+    );
+  }
+}
+
 class AddWidget extends HookWidget {
   final String title;
   final VoidCallback doneAction;

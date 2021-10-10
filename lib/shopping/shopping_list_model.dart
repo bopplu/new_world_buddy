@@ -36,11 +36,18 @@ final progressSelectedItemProvider = Provider<ShoppingItem?>((ref) {
   return ref.watch(shoppingListProvider.notifier)._findByIdRecursively(selectedItemId.state, shoppingList);
 });
 
+final progressIngredientItemIdProvider = StateProvider<String>((ref) => '');
+final progressIngredientItemProvider = Provider<ShoppingItem?>((ref) {
+  final ingredientList = ref.watch(ingredientListProvider);
+  final selectedItemId = ref.watch(progressIngredientItemIdProvider);
+  return ingredientList.singleWhereOrNull((ingredient) => ingredient.id == selectedItemId.state);
+});
+
 final ingredientListProvider = Provider<List<ShoppingItem>>((ref) {
   final location = ref.watch(selectedLocationProvider);
   final filteredShoppingList = ref.watch(filteredShoppingListProvider);
 
-  final flatList = filteredShoppingList.expand((item) => _unwrap(item.ingredients)).toList();
+  final flatList = _unwrap(filteredShoppingList).toList();
 
   final occurrenceMap = <String, int>{};
   for (var item in flatList) {
@@ -107,7 +114,30 @@ class ShoppingList extends StateNotifier<List<ShoppingItem>> {
             return item.copyWith(completedAmount: amount);
           })),
     );
-    // _updateParent(id);
+    saveItems();
+  }
+
+  void updateAllUntilDepleted(String name, String location, {required int completedAmount}) {
+    int remainingAmount = completedAmount;
+    if (remainingAmount <= 0) {
+      return;
+    }
+    state = _modifyRecursively(
+      state,
+      (item) {
+        if (remainingAmount <= 0) {
+          return item;
+        }
+        if (item.name == name && item.location == location) {
+          final amountToFill = item.amount - item.completedAmount;
+          final isEnoughRemaining = remainingAmount - amountToFill >= 0;
+          final fillingAmount = isEnoughRemaining ? item.amount : remainingAmount;
+          remainingAmount -= amountToFill;
+          return item.copyWith(completedAmount: fillingAmount);
+        }
+        return item;
+      },
+    );
     saveItems();
   }
 
@@ -118,23 +148,12 @@ class ShoppingList extends StateNotifier<List<ShoppingItem>> {
 
   void completeAll(String name, String location) {
     state = _modifyRecursively(state, (item) {
-      if (item.name == name) {
+      if (item.name == name && item.location == location) {
         return item.copyWith(completedAmount: item.amount);
       }
       return item;
     });
 
-    //update bottom up
-    // for (var shoppingItem in state) {
-    //   final unwrapped = _unwrap(shoppingItem.ingredients);
-    //   if (unwrapped.every((element) => element.complete)) {
-    //     for (var item in unwrapped) {
-    //       if (item.parentId != null) {
-    //         _updateParent(item.parentId!);
-    //       }
-    //     }
-    //   }
-    // }
     saveItems();
   }
 

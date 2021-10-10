@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:new_world_buddy/catalog/add_screen.dart';
 import 'package:new_world_buddy/catalog/catalog_model.dart';
 import 'package:new_world_buddy/catalog/catalog_screen.dart';
 import 'package:new_world_buddy/catalog/item.dart';
@@ -112,13 +113,13 @@ class ShoppingListScreen extends HookWidget {
               itemBuilder: (ctx, index) => ShoppingRow(
                 index,
                 ingredientShoppingList,
+                onTap: () {
+                  ctx.read(progressIngredientItemIdProvider).state = ingredientShoppingList[index].id;
+                  Navigator.of(context).pushNamed(AddProgressIngredientListScreen.route);
+                },
                 onLongPress: () {
                   final item = ingredientShoppingList[index];
-                  if (item.complete()) {
-                    ctx.read(shoppingListProvider.notifier).incompleteAll(item.name, item.location);
-                  } else {
-                    ctx.read(shoppingListProvider.notifier).completeAll(item.name, item.location);
-                  }
+                  ctx.read(shoppingListProvider.notifier).completeAll(item.name, item.location);
                 },
               ),
               separatorBuilder: (_, index) => const Divider(

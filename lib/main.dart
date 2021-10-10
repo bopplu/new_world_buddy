@@ -37,7 +37,8 @@ class NewWorldBuddy extends HookWidget {
         CategoryScreen.route: (_) => const CategoryScreen(),
         AddScreen.route: (_) => const AddScreen(),
         ItemDetailScreen.route: (_) => const ItemDetailScreen(),
-        AddProgressScreen.route: (_) => const AddProgressScreen()
+        AddProgressScreen.route: (_) => const AddProgressScreen(),
+        AddProgressIngredientListScreen.route: (_) => const AddProgressIngredientListScreen()
       },
     );
   }

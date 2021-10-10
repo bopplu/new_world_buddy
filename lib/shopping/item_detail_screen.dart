@@ -49,6 +49,10 @@ class ItemDetailScreen extends HookWidget {
                       context.read(progressSelectedItemIdProvider).state = e.id;
                       Navigator.of(context).pushNamed(AddProgressScreen.route);
                     },
+                    onDoubleTap: () {
+                      context.read(selectedItemIdProvider).state = e.id;
+                      Navigator.of(context).pushNamed(ItemDetailScreen.route);
+                    },
                     onLongPress: () {
                       context.read(shoppingListProvider.notifier).completeItem(e.id);
                     },
@@ -87,6 +91,20 @@ class ItemDetailScreen extends HookWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
+                    context.read(progressSelectedItemIdProvider).state = selectedItem.id;
+                    Navigator.of(context).pushNamed(AddProgressScreen.route);
+                  },
+                  child: const Text(
+                    'Add Progress',
+                    textScaleFactor: 1.1,
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: Theme.of(context).colorScheme.secondaryVariant,
+                    fixedSize: const Size.fromHeight(50),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
                     context.read(shoppingListProvider.notifier).completeItem(selectedItem.id);
                     if (!selectedItem.complete()) {
                       Navigator.of(context).pop();
@@ -101,20 +119,6 @@ class ItemDetailScreen extends HookWidget {
                     fixedSize: const Size.fromHeight(50),
                   ),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    context.read(progressSelectedItemIdProvider).state = selectedItem.id;
-                    Navigator.of(context).pushNamed(AddProgressScreen.route);
-                  },
-                  child: const Text(
-                    'Add Progress',
-                    textScaleFactor: 1.1,
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    primary: Theme.of(context).colorScheme.secondaryVariant,
-                    fixedSize: const Size.fromHeight(50),
-                  ),
-                )
               ],
             ),
           )

@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:new_world_buddy/catalog/catalog_model.dart';
 import 'package:new_world_buddy/catalog/item.dart';
 import 'package:new_world_buddy/locations/location_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -40,48 +39,19 @@ final progressSelectedItemProvider = Provider<ShoppingItem?>((ref) {
 final ingredientShoppingListProvider = Provider<List<ShoppingItem>>((ref) {
   final location = ref.watch(selectedLocationProvider);
   final filteredShoppingList = ref.watch(filteredShoppingListProvider);
-  final itemList = ref.watch(fullItemListProvider);
 
-  final itemNames = itemList.map((item) => item.name);
+  final flatList = filteredShoppingList.expand((item) => _unwrap(item.ingredients)).toList();
 
-  final items = filteredShoppingList
-      .where((shoppingItem) => !shoppingItem.complete)
-      .where((shoppingItem) => itemNames.contains(shoppingItem.name))
-      .map((shoppingItem) => itemList.singleWhere((item) => shoppingItem.name == item.name));
-  final itemsWithIngredients = items.where((item) => item.ingredients != null && item.ingredients!.isNotEmpty);
-  final itemsWithIngredientsNames = itemsWithIngredients.map((item) => item.name);
-  final itemsWithoutIngredientsNames =
-      items.where((item) => item.ingredients == null || item.ingredients!.isEmpty).map((item) => item.name);
-  final shoppingItemsWithoutIngredients =
-      filteredShoppingList.where((shoppingItem) => itemsWithoutIngredientsNames.contains(shoppingItem.name));
-  final shoppingItemsWithIngredients =
-      filteredShoppingList.where((shoppingItem) => itemsWithIngredientsNames.contains(shoppingItem.name));
-
-  final Map<String, int> occurrenceMap = {};
-  itemsWithIngredients.expand((item) {
-    final shoppingItem = shoppingItemsWithIngredients.singleWhere((shoppingItem) => shoppingItem.name == item.name);
-    return [for (var i = 0; i < shoppingItem.amount; i++) ..._unwrapIngredients(itemList, item)];
-  }).forEach((ingr) => occurrenceMap.update(ingr.name, (value) => value += 1, ifAbsent: () => 1));
-
-  final shoppingListMap = {for (var item in shoppingItemsWithoutIngredients) item.name: item.amount};
-
-  for (var entry in occurrenceMap.entries) {
-    shoppingListMap.update(entry.key, (value) => value += entry.value, ifAbsent: () => entry.value);
+  final occurrenceMap = <String, int>{};
+  for (var item in flatList) {
+    occurrenceMap.update(item.name, (value) => value += item.amount, ifAbsent: () => item.amount);
   }
-  final ingredientShoppingList =
-      shoppingListMap.entries.map((entry) => ShoppingItem(_uuid.v4(), entry.key, entry.value, location)).toList();
-  ingredientShoppingList.sort((item, other) => item.name.compareTo(other.name));
 
-  return ingredientShoppingList;
+  return occurrenceMap.entries.map((e) => ShoppingItem(_uuid.v4(), e.key, e.value, location)).toList();
 });
 
-Iterable<Item> _unwrapIngredients(Iterable<Item> items, Item itemToUnwrap) {
-  return itemToUnwrap.ingredients?.expand((ingredient) {
-        final item = items.singleWhere((element) => element.name == ingredient.name);
-        final itemsIngredients = [for (var i = 0; i < ingredient.quantity; i++) ..._unwrapIngredients(items, item)];
-        return itemsIngredients.isNotEmpty ? itemsIngredients : [for (var i = 0; i < ingredient.quantity; i++) item];
-      }) ??
-      [];
+Iterable<ShoppingItem> _unwrap(List<ShoppingItem> list) {
+  return list.expand((item) => item.ingredients.isNotEmpty ? _unwrap(item.ingredients) : [item]);
 }
 
 final ingredientListProvider = StateNotifierProvider<IngredientList, List<ShoppingItem>>((ref) {
@@ -100,7 +70,6 @@ class IngredientList extends StateNotifier<List<ShoppingItem>> {
   }
 
   void replace(List<ShoppingItem> list) {
-    log('state $state, list $list');
     state = list;
   }
 }
@@ -144,13 +113,13 @@ class ShoppingList extends StateNotifier<List<ShoppingItem>> {
   }
 
   void updateItem(String id, {int? completedAmount, bool? complete}) {
-    state = modifyByIdRecursively(
+    state = _modifyByIdRecursively(
       id,
       state,
       (item) => item.copyWith(
           complete: complete ?? item.complete,
           completedAmount: completedAmount ?? item.completedAmount,
-          ingredients: modifyRecursively(item.ingredients, (item) {
+          ingredients: _modifyRecursively(item.ingredients, (item) {
             final amount =
                 completedAmount != null ? (completedAmount * item.factor) + item.completedAmount : item.completedAmount;
             return item.copyWith(completedAmount: amount, complete: amount >= item.amount);
@@ -160,7 +129,27 @@ class ShoppingList extends StateNotifier<List<ShoppingItem>> {
   }
 
   void completeItem(String id) {
-    state = modifyByIdRecursively(id, state, (item) => _completeOrToggleRecursively(item));
+    state = _modifyByIdRecursively(id, state, (item) => _completeOrToggleRecursively(item));
+    saveItems();
+  }
+
+  void completeAll(String name, String location) {
+    state = _modifyRecursively(state, (item) {
+      if (item.name == name) {
+        return item.copyWith(completedAmount: item.amount, complete: true);
+      }
+      return item;
+    });
+    saveItems();
+  }
+
+  void incompleteAll(String name, String location) {
+    state = _modifyRecursively(state, (item) {
+      if (item.name == name) {
+        return item.copyWith(completedAmount: item.amount, complete: false);
+      }
+      return item;
+    });
     saveItems();
   }
 
@@ -182,19 +171,19 @@ class ShoppingList extends StateNotifier<List<ShoppingItem>> {
     return searchPile.expand((item) => _flatten(item)).singleWhereOrNull((item) => item.id == id);
   }
 
-  List<ShoppingItem> modifyByIdRecursively(
+  List<ShoppingItem> _modifyByIdRecursively(
       String id, List<ShoppingItem> searchPile, ShoppingItem Function(ShoppingItem) callback) {
     return searchPile.map((item) {
       if (item.id == id) {
         return callback(item);
       }
-      return item.copyWith(ingredients: modifyByIdRecursively(id, item.ingredients, callback));
+      return item.copyWith(ingredients: _modifyByIdRecursively(id, item.ingredients, callback));
     }).toList();
   }
 
-  List<ShoppingItem> modifyRecursively(List<ShoppingItem> searchPile, ShoppingItem Function(ShoppingItem) callback) {
+  List<ShoppingItem> _modifyRecursively(List<ShoppingItem> searchPile, ShoppingItem Function(ShoppingItem) callback) {
     return searchPile
-        .map((item) => callback(item).copyWith(ingredients: modifyRecursively(item.ingredients, callback)))
+        .map((item) => callback(item).copyWith(ingredients: _modifyRecursively(item.ingredients, callback)))
         .toList();
   }
 

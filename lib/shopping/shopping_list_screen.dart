@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -32,10 +34,10 @@ class ShoppingListScreen extends HookWidget {
               items: locationList
                   .map(
                     (loc) => DropdownMenuItem(
-                      child: Text(loc),
-                      value: loc,
-                    ),
-                  )
+                  child: Text(loc),
+                  value: loc,
+                ),
+              )
                   .toList(),
               onChanged: (newVal) {
                 context.read(selectedLocationProvider.notifier).selectLocation(newVal ?? selectedLocation);
@@ -111,6 +113,16 @@ class ShoppingListScreen extends HookWidget {
               itemBuilder: (ctx, index) => ShoppingRow(
                 index,
                 ingredientShoppingList,
+                onTap: () {
+                  log('ingredient list $ingredientShoppingList');
+                  final item = ingredientShoppingList[index];
+                  if (item.complete) {
+                    ctx.read(shoppingListProvider.notifier).incompleteAll(item.name, item.location);
+                  } else {
+                    ctx.read(shoppingListProvider.notifier).completeAll(item.name, item.location);
+                  }
+                  ctx.read(ingredientListProvider.notifier).completeItem(item.id);
+                },
               ),
               separatorBuilder: (_, index) => const Divider(
                 thickness: 1,

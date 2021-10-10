@@ -7,15 +7,18 @@ import 'package:uuid/uuid.dart';
 const _uuid = Uuid();
 
 useConvertItem(Item item, int amount, location) => useCallback(() {
-      return ShoppingItem(_uuid.v4(), item.name, amount, location,
-          ingredients: item.ingredients?.map((e) => _convertIngredient(e, amount, location)).toList() ?? []);
+      final itemId = _uuid.v4();
+      return ShoppingItem(itemId, item.name, amount, location,
+          ingredients: item.ingredients?.map((e) => _convertIngredient(e, itemId, amount, location)).toList() ?? []);
     }, [item, amount, location])();
 
-ShoppingItem _convertIngredient(Ingredient ingredient, int amount, String location) {
+ShoppingItem _convertIngredient(Ingredient ingredient, String parentId, int amount, String location) {
+  final itemId = _uuid.v4();
   final ingredientItem = useProvider(itemProvider(ingredient.name))!;
-  final ingredientsOfIngredient =
-      ingredientItem.ingredients?.map((e) => _convertIngredient(e, ingredient.quantity * amount, location)).toList() ??
-          [];
-  return ShoppingItem(_uuid.v4(), ingredient.name, ingredient.quantity * amount, location,
+  final ingredientsOfIngredient = ingredientItem.ingredients
+          ?.map((e) => _convertIngredient(e, itemId, ingredient.quantity * amount, location))
+          .toList() ??
+      [];
+  return ShoppingItem(itemId, ingredient.name, ingredient.quantity * amount, location,
       ingredients: ingredientsOfIngredient, factor: ingredient.quantity);
 }

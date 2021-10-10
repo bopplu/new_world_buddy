@@ -63,6 +63,25 @@
       ]
     },
     {
+      "name": "Bullwark Crude Iron Armaments",
+      "category": "crates",
+      "tier": 1,
+      "ingredients": [
+        {
+          "name": "Iron Ore",
+          "quantity": 15
+        },
+        {
+          "name": "Green Wood",
+          "quantity": 3
+        },
+        {
+          "name": "Rawhide",
+          "quantity": 12
+        }
+      ]
+    },
+    {
       "name": "Charcoal",
       "category": "",
       "tier": 2,
@@ -670,6 +689,44 @@
         {
           "name": "Rawhide",
           "quantity": 8
+        }
+      ]
+    },
+    {
+      "name": "Unyielding Iron Armor",
+      "category": "crates",
+      "tier": 1,
+      "ingredients": [
+        {
+          "name": "Iron Ingot",
+          "quantity": 10
+        },
+        {
+          "name": "Coarse Leather",
+          "quantity": 10
+        },
+        {
+          "name": "Linen",
+          "quantity": 5
+        }
+      ]
+    },
+    {
+      "name": "Stout Iron Armor",
+      "category": "crates",
+      "tier": 1,
+      "ingredients": [
+        {
+          "name": "Iron Ingot",
+          "quantity": 10
+        },
+        {
+          "name": "Coarse Leather",
+          "quantity": 10
+        },
+        {
+          "name": "Linen",
+          "quantity": 5
         }
       ]
     }

@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -113,15 +112,13 @@ class ShoppingListScreen extends HookWidget {
               itemBuilder: (ctx, index) => ShoppingRow(
                 index,
                 ingredientShoppingList,
-                onTap: () {
-                  log('ingredient list $ingredientShoppingList');
+                onLongPress: () {
                   final item = ingredientShoppingList[index];
-                  if (item.complete) {
+                  if (item.complete()) {
                     ctx.read(shoppingListProvider.notifier).incompleteAll(item.name, item.location);
                   } else {
                     ctx.read(shoppingListProvider.notifier).completeAll(item.name, item.location);
                   }
-                  ctx.read(ingredientListProvider.notifier).completeItem(item.id);
                 },
               ),
               separatorBuilder: (_, index) => const Divider(
@@ -183,7 +180,7 @@ class ShoppingRow extends HookWidget {
                 text: item.name,
               ),
             ],
-            style: item.complete ? textStyleStrikethrough : textStyle,
+            style: item.complete() ? textStyleStrikethrough : textStyle,
           ),
         ),
       ),

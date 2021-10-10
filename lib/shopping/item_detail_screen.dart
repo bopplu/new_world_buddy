@@ -69,7 +69,7 @@ class ItemDetailScreen extends HookWidget {
                                 ),
                                 TextSpan(text: e.name),
                               ],
-                              style: e.complete ? textStyleStrikethrough : textStyle,
+                              style: e.complete() ? textStyleStrikethrough : textStyle,
                             ),
                           ),
                         ],
@@ -88,7 +88,7 @@ class ItemDetailScreen extends HookWidget {
                 ElevatedButton(
                   onPressed: () {
                     context.read(shoppingListProvider.notifier).completeItem(selectedItem.id);
-                    if (!selectedItem.complete) {
+                    if (!selectedItem.complete()) {
                       Navigator.of(context).pop();
                     }
                   },

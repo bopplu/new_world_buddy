@@ -903,7 +903,6 @@ class _$ShoppingItemTearOff {
 
   _ShoppingItem call(String id, String name, int amount, String location,
       {int completedAmount = 0,
-      bool complete = false,
       int factor = 1,
       List<ShoppingItem> ingredients = const []}) {
     return _ShoppingItem(
@@ -912,7 +911,6 @@ class _$ShoppingItemTearOff {
       amount,
       location,
       completedAmount: completedAmount,
-      complete: complete,
       factor: factor,
       ingredients: ingredients,
     );
@@ -933,7 +931,6 @@ mixin _$ShoppingItem {
   int get amount => throw _privateConstructorUsedError;
   String get location => throw _privateConstructorUsedError;
   int get completedAmount => throw _privateConstructorUsedError;
-  bool get complete => throw _privateConstructorUsedError;
   int get factor => throw _privateConstructorUsedError;
   List<ShoppingItem> get ingredients => throw _privateConstructorUsedError;
 
@@ -954,7 +951,6 @@ abstract class $ShoppingItemCopyWith<$Res> {
       int amount,
       String location,
       int completedAmount,
-      bool complete,
       int factor,
       List<ShoppingItem> ingredients});
 }
@@ -974,7 +970,6 @@ class _$ShoppingItemCopyWithImpl<$Res> implements $ShoppingItemCopyWith<$Res> {
     Object? amount = freezed,
     Object? location = freezed,
     Object? completedAmount = freezed,
-    Object? complete = freezed,
     Object? factor = freezed,
     Object? ingredients = freezed,
   }) {
@@ -999,10 +994,6 @@ class _$ShoppingItemCopyWithImpl<$Res> implements $ShoppingItemCopyWith<$Res> {
           ? _value.completedAmount
           : completedAmount // ignore: cast_nullable_to_non_nullable
               as int,
-      complete: complete == freezed
-          ? _value.complete
-          : complete // ignore: cast_nullable_to_non_nullable
-              as bool,
       factor: factor == freezed
           ? _value.factor
           : factor // ignore: cast_nullable_to_non_nullable
@@ -1028,7 +1019,6 @@ abstract class _$ShoppingItemCopyWith<$Res>
       int amount,
       String location,
       int completedAmount,
-      bool complete,
       int factor,
       List<ShoppingItem> ingredients});
 }
@@ -1050,7 +1040,6 @@ class __$ShoppingItemCopyWithImpl<$Res> extends _$ShoppingItemCopyWithImpl<$Res>
     Object? amount = freezed,
     Object? location = freezed,
     Object? completedAmount = freezed,
-    Object? complete = freezed,
     Object? factor = freezed,
     Object? ingredients = freezed,
   }) {
@@ -1075,10 +1064,6 @@ class __$ShoppingItemCopyWithImpl<$Res> extends _$ShoppingItemCopyWithImpl<$Res>
           ? _value.completedAmount
           : completedAmount // ignore: cast_nullable_to_non_nullable
               as int,
-      complete: complete == freezed
-          ? _value.complete
-          : complete // ignore: cast_nullable_to_non_nullable
-              as bool,
       factor: factor == freezed
           ? _value.factor
           : factor // ignore: cast_nullable_to_non_nullable
@@ -1093,12 +1078,10 @@ class __$ShoppingItemCopyWithImpl<$Res> extends _$ShoppingItemCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_ShoppingItem implements _ShoppingItem {
+class _$_ShoppingItem extends _ShoppingItem {
   const _$_ShoppingItem(this.id, this.name, this.amount, this.location,
-      {this.completedAmount = 0,
-      this.complete = false,
-      this.factor = 1,
-      this.ingredients = const []});
+      {this.completedAmount = 0, this.factor = 1, this.ingredients = const []})
+      : super._();
 
   factory _$_ShoppingItem.fromJson(Map<String, dynamic> json) =>
       _$$_ShoppingItemFromJson(json);
@@ -1114,9 +1097,6 @@ class _$_ShoppingItem implements _ShoppingItem {
   @JsonKey(defaultValue: 0)
   @override
   final int completedAmount;
-  @JsonKey(defaultValue: false)
-  @override
-  final bool complete;
   @JsonKey(defaultValue: 1)
   @override
   final int factor;
@@ -1126,7 +1106,7 @@ class _$_ShoppingItem implements _ShoppingItem {
 
   @override
   String toString() {
-    return 'ShoppingItem(id: $id, name: $name, amount: $amount, location: $location, completedAmount: $completedAmount, complete: $complete, factor: $factor, ingredients: $ingredients)';
+    return 'ShoppingItem(id: $id, name: $name, amount: $amount, location: $location, completedAmount: $completedAmount, factor: $factor, ingredients: $ingredients)';
   }
 
   @override
@@ -1145,9 +1125,6 @@ class _$_ShoppingItem implements _ShoppingItem {
             (identical(other.completedAmount, completedAmount) ||
                 const DeepCollectionEquality()
                     .equals(other.completedAmount, completedAmount)) &&
-            (identical(other.complete, complete) ||
-                const DeepCollectionEquality()
-                    .equals(other.complete, complete)) &&
             (identical(other.factor, factor) ||
                 const DeepCollectionEquality().equals(other.factor, factor)) &&
             (identical(other.ingredients, ingredients) ||
@@ -1163,7 +1140,6 @@ class _$_ShoppingItem implements _ShoppingItem {
       const DeepCollectionEquality().hash(amount) ^
       const DeepCollectionEquality().hash(location) ^
       const DeepCollectionEquality().hash(completedAmount) ^
-      const DeepCollectionEquality().hash(complete) ^
       const DeepCollectionEquality().hash(factor) ^
       const DeepCollectionEquality().hash(ingredients);
 
@@ -1178,13 +1154,13 @@ class _$_ShoppingItem implements _ShoppingItem {
   }
 }
 
-abstract class _ShoppingItem implements ShoppingItem {
+abstract class _ShoppingItem extends ShoppingItem {
   const factory _ShoppingItem(
       String id, String name, int amount, String location,
       {int completedAmount,
-      bool complete,
       int factor,
       List<ShoppingItem> ingredients}) = _$_ShoppingItem;
+  const _ShoppingItem._() : super._();
 
   factory _ShoppingItem.fromJson(Map<String, dynamic> json) =
       _$_ShoppingItem.fromJson;
@@ -1199,8 +1175,6 @@ abstract class _ShoppingItem implements ShoppingItem {
   String get location => throw _privateConstructorUsedError;
   @override
   int get completedAmount => throw _privateConstructorUsedError;
-  @override
-  bool get complete => throw _privateConstructorUsedError;
   @override
   int get factor => throw _privateConstructorUsedError;
   @override
@@ -1356,5 +1330,157 @@ abstract class _LocationList implements LocationList {
   @override
   @JsonKey(ignore: true)
   _$LocationListCopyWith<_LocationList> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+class _$IngredientListEntryTearOff {
+  const _$IngredientListEntryTearOff();
+
+  _IngredientListEntry call(int amount, bool complete) {
+    return _IngredientListEntry(
+      amount,
+      complete,
+    );
+  }
+}
+
+/// @nodoc
+const $IngredientListEntry = _$IngredientListEntryTearOff();
+
+/// @nodoc
+mixin _$IngredientListEntry {
+  int get amount => throw _privateConstructorUsedError;
+  bool get complete => throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $IngredientListEntryCopyWith<IngredientListEntry> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $IngredientListEntryCopyWith<$Res> {
+  factory $IngredientListEntryCopyWith(
+          IngredientListEntry value, $Res Function(IngredientListEntry) then) =
+      _$IngredientListEntryCopyWithImpl<$Res>;
+  $Res call({int amount, bool complete});
+}
+
+/// @nodoc
+class _$IngredientListEntryCopyWithImpl<$Res>
+    implements $IngredientListEntryCopyWith<$Res> {
+  _$IngredientListEntryCopyWithImpl(this._value, this._then);
+
+  final IngredientListEntry _value;
+  // ignore: unused_field
+  final $Res Function(IngredientListEntry) _then;
+
+  @override
+  $Res call({
+    Object? amount = freezed,
+    Object? complete = freezed,
+  }) {
+    return _then(_value.copyWith(
+      amount: amount == freezed
+          ? _value.amount
+          : amount // ignore: cast_nullable_to_non_nullable
+              as int,
+      complete: complete == freezed
+          ? _value.complete
+          : complete // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+abstract class _$IngredientListEntryCopyWith<$Res>
+    implements $IngredientListEntryCopyWith<$Res> {
+  factory _$IngredientListEntryCopyWith(_IngredientListEntry value,
+          $Res Function(_IngredientListEntry) then) =
+      __$IngredientListEntryCopyWithImpl<$Res>;
+  @override
+  $Res call({int amount, bool complete});
+}
+
+/// @nodoc
+class __$IngredientListEntryCopyWithImpl<$Res>
+    extends _$IngredientListEntryCopyWithImpl<$Res>
+    implements _$IngredientListEntryCopyWith<$Res> {
+  __$IngredientListEntryCopyWithImpl(
+      _IngredientListEntry _value, $Res Function(_IngredientListEntry) _then)
+      : super(_value, (v) => _then(v as _IngredientListEntry));
+
+  @override
+  _IngredientListEntry get _value => super._value as _IngredientListEntry;
+
+  @override
+  $Res call({
+    Object? amount = freezed,
+    Object? complete = freezed,
+  }) {
+    return _then(_IngredientListEntry(
+      amount == freezed
+          ? _value.amount
+          : amount // ignore: cast_nullable_to_non_nullable
+              as int,
+      complete == freezed
+          ? _value.complete
+          : complete // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_IngredientListEntry implements _IngredientListEntry {
+  const _$_IngredientListEntry(this.amount, this.complete);
+
+  @override
+  final int amount;
+  @override
+  final bool complete;
+
+  @override
+  String toString() {
+    return 'IngredientListEntry(amount: $amount, complete: $complete)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is _IngredientListEntry &&
+            (identical(other.amount, amount) ||
+                const DeepCollectionEquality().equals(other.amount, amount)) &&
+            (identical(other.complete, complete) ||
+                const DeepCollectionEquality()
+                    .equals(other.complete, complete)));
+  }
+
+  @override
+  int get hashCode =>
+      runtimeType.hashCode ^
+      const DeepCollectionEquality().hash(amount) ^
+      const DeepCollectionEquality().hash(complete);
+
+  @JsonKey(ignore: true)
+  @override
+  _$IngredientListEntryCopyWith<_IngredientListEntry> get copyWith =>
+      __$IngredientListEntryCopyWithImpl<_IngredientListEntry>(
+          this, _$identity);
+}
+
+abstract class _IngredientListEntry implements IngredientListEntry {
+  const factory _IngredientListEntry(int amount, bool complete) =
+      _$_IngredientListEntry;
+
+  @override
+  int get amount => throw _privateConstructorUsedError;
+  @override
+  bool get complete => throw _privateConstructorUsedError;
+  @override
+  @JsonKey(ignore: true)
+  _$IngredientListEntryCopyWith<_IngredientListEntry> get copyWith =>
       throw _privateConstructorUsedError;
 }

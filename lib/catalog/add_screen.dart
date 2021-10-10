@@ -69,8 +69,7 @@ class AddProgressScreen extends HookWidget {
       'Add Progress to ${selectedItem.name}',
       selectedItemAmountProvider,
       doneAction: () {
-        context.read(shoppingListProvider.notifier).updateItem(selectedItem.id,
-            completedAmount: _amount, complete: (_amount + selectedItem.amount) >= selectedItem.amount);
+        context.read(shoppingListProvider.notifier).updateItem(selectedItem.id, completedAmount: _amount);
         Navigator.of(context).pop();
       },
     );

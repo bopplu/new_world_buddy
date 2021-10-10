@@ -40,13 +40,19 @@ class Ingredient with _$Ingredient {
 
 @freezed
 class ShoppingItem with _$ShoppingItem {
+  const ShoppingItem._();
+
   const factory ShoppingItem(String id, String name, int amount, String location,
       {@Default(0) int completedAmount,
-      @Default(false) bool complete,
       @Default(1) int factor,
       @Default([]) List<ShoppingItem> ingredients}) = _ShoppingItem;
 
   factory ShoppingItem.fromJson(Map<String, dynamic> json) => _$ShoppingItemFromJson(json);
+
+  bool complete() {
+    return amount - completedAmount <= 0 ||
+        (ingredients.isNotEmpty && ingredients.every((element) => element.complete()));
+  }
 }
 
 @freezed
@@ -54,4 +60,9 @@ class LocationList with _$LocationList {
   const factory LocationList(List<String> locations) = _LocationList;
 
   factory LocationList.fromJson(Map<String, dynamic> json) => _$LocationListFromJson(json);
+}
+
+@freezed
+class IngredientListEntry with _$IngredientListEntry {
+  const factory IngredientListEntry(int amount, bool complete) = _IngredientListEntry;
 }

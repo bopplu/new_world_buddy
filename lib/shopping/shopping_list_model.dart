@@ -26,17 +26,17 @@ final selectedItemIdProvider = StateProvider<String>((ref) => '');
 final selectedItemProvider = Provider<ShoppingItem?>((ref) {
   final shoppingList = ref.watch(shoppingListProvider);
   final selectedItemId = ref.watch(selectedItemIdProvider);
-  return ref.watch(shoppingListProvider.notifier).findByIdRecursively(selectedItemId.state, shoppingList);
+  return ref.watch(shoppingListProvider.notifier)._findByIdRecursively(selectedItemId.state, shoppingList);
 });
 
 final progressSelectedItemIdProvider = StateProvider<String>((ref) => '');
 final progressSelectedItemProvider = Provider<ShoppingItem?>((ref) {
   final shoppingList = ref.watch(shoppingListProvider);
   final selectedItemId = ref.watch(progressSelectedItemIdProvider);
-  return ref.watch(shoppingListProvider.notifier).findByIdRecursively(selectedItemId.state, shoppingList);
+  return ref.watch(shoppingListProvider.notifier)._findByIdRecursively(selectedItemId.state, shoppingList);
 });
 
-final ingredientShoppingListProvider = Provider<List<ShoppingItem>>((ref) {
+final ingredientListProvider = Provider<List<ShoppingItem>>((ref) {
   final location = ref.watch(selectedLocationProvider);
   final filteredShoppingList = ref.watch(filteredShoppingListProvider);
 
@@ -44,34 +44,18 @@ final ingredientShoppingListProvider = Provider<List<ShoppingItem>>((ref) {
 
   final occurrenceMap = <String, int>{};
   for (var item in flatList) {
-    occurrenceMap.update(item.name, (value) => value += item.amount, ifAbsent: () => item.amount);
+    occurrenceMap.update(item.name, (value) => value + (item.amount - item.completedAmount),
+        ifAbsent: () => item.amount - item.completedAmount);
   }
 
-  return occurrenceMap.entries.map((e) => ShoppingItem(_uuid.v4(), e.key, e.value, location)).toList();
+  return occurrenceMap.entries
+      .whereNot((element) => element.value == 0)
+      .map((e) => ShoppingItem(_uuid.v4(), e.key, e.value, location))
+      .toList();
 });
 
 Iterable<ShoppingItem> _unwrap(List<ShoppingItem> list) {
   return list.expand((item) => item.ingredients.isNotEmpty ? _unwrap(item.ingredients) : [item]);
-}
-
-final ingredientListProvider = StateNotifierProvider<IngredientList, List<ShoppingItem>>((ref) {
-  final list = ref.watch(ingredientShoppingListProvider);
-  return IngredientList(list);
-});
-
-class IngredientList extends StateNotifier<List<ShoppingItem>> {
-  IngredientList(List<ShoppingItem>? initialList) : super(initialList ?? []);
-
-  void completeItem(String id) {
-    state = [
-      ...state.where((item) => item.id != id),
-      ...state.where((item) => item.id == id).map((item) => item.copyWith(complete: true)),
-    ];
-  }
-
-  void replace(List<ShoppingItem> list) {
-    state = list;
-  }
 }
 
 class ShoppingList extends StateNotifier<List<ShoppingItem>> {
@@ -94,8 +78,7 @@ class ShoppingList extends StateNotifier<List<ShoppingItem>> {
 
     final itemToAdd = existingItem?.copyWith(
             amount: existingAmount + item.amount,
-            ingredients: _updateIngredients(existingIngredients, item.ingredients),
-            complete: false) ??
+            ingredients: _updateIngredients(existingIngredients, item.ingredients)) ??
         item;
 
     state = [...others, itemToAdd];
@@ -108,23 +91,23 @@ class ShoppingList extends StateNotifier<List<ShoppingItem>> {
   }
 
   void clearDone(String location) {
-    state = [...state.where((item) => !item.complete || item.location != location)];
+    state = [...state.where((item) => !item.complete() || item.location != location)];
     saveItems();
   }
 
-  void updateItem(String id, {int? completedAmount, bool? complete}) {
+  void updateItem(String id, {int? completedAmount}) {
     state = _modifyByIdRecursively(
       id,
       state,
       (item) => item.copyWith(
-          complete: complete ?? item.complete,
           completedAmount: completedAmount ?? item.completedAmount,
           ingredients: _modifyRecursively(item.ingredients, (item) {
             final amount =
                 completedAmount != null ? (completedAmount * item.factor) + item.completedAmount : item.completedAmount;
-            return item.copyWith(completedAmount: amount, complete: amount >= item.amount);
+            return item.copyWith(completedAmount: amount);
           })),
     );
+    // _updateParent(id);
     saveItems();
   }
 
@@ -136,29 +119,57 @@ class ShoppingList extends StateNotifier<List<ShoppingItem>> {
   void completeAll(String name, String location) {
     state = _modifyRecursively(state, (item) {
       if (item.name == name) {
-        return item.copyWith(completedAmount: item.amount, complete: true);
+        return item.copyWith(completedAmount: item.amount);
       }
       return item;
     });
+
+    //update bottom up
+    // for (var shoppingItem in state) {
+    //   final unwrapped = _unwrap(shoppingItem.ingredients);
+    //   if (unwrapped.every((element) => element.complete)) {
+    //     for (var item in unwrapped) {
+    //       if (item.parentId != null) {
+    //         _updateParent(item.parentId!);
+    //       }
+    //     }
+    //   }
+    // }
     saveItems();
   }
 
   void incompleteAll(String name, String location) {
     state = _modifyRecursively(state, (item) {
       if (item.name == name) {
-        return item.copyWith(completedAmount: item.amount, complete: false);
+        return item.copyWith(completedAmount: item.amount);
       }
       return item;
     });
     saveItems();
   }
 
+  // void _updateParent(String childId) {
+  //   final updatedItem = _findByIdRecursively(childId, state);
+  //   if (updatedItem != null && updatedItem.parentId != null && updatedItem.parentId != '') {
+  //     bool needUpdateParentParent = false;
+  //     state = _modifyByIdRecursively(updatedItem.parentId ?? '', state, (item) {
+  //       if (item.ingredients.every((element) => element.complete)) {
+  //         needUpdateParentParent = true;
+  //         return item.copyWith(completedAmount: item.amount, complete: true);
+  //       }
+  //       return item;
+  //     });
+  //     if (needUpdateParentParent) {
+  //       _updateParent(updatedItem.parentId!);
+  //     }
+  //   }
+  // }
+
   List<ShoppingItem> _updateIngredients(List<ShoppingItem> ingredients, List<ShoppingItem> others) {
     return ingredients.map((e) {
       final match = others.singleWhereOrNull((other) => other.name == e.name);
       return e.copyWith(
           amount: e.amount + (match?.amount ?? 0),
-          complete: false,
           ingredients: _updateIngredients(e.ingredients, match?.ingredients ?? []));
     }).toList();
   }
@@ -167,7 +178,7 @@ class ShoppingList extends StateNotifier<List<ShoppingItem>> {
     return [item, ...item.ingredients.expand((ingredient) => _flatten(ingredient))];
   }
 
-  ShoppingItem? findByIdRecursively(String id, List<ShoppingItem> searchPile) {
+  ShoppingItem? _findByIdRecursively(String id, List<ShoppingItem> searchPile) {
     return searchPile.expand((item) => _flatten(item)).singleWhereOrNull((item) => item.id == id);
   }
 
@@ -189,9 +200,8 @@ class ShoppingList extends StateNotifier<List<ShoppingItem>> {
 
   ShoppingItem _completeOrToggleRecursively(ShoppingItem item, {bool? complete}) {
     final isToggle = complete == null;
-    final value = isToggle ? !item.complete : complete!;
+    final value = isToggle ? !item.complete() : complete!;
     return item.copyWith(
-        complete: value,
         completedAmount: value ? item.amount : 0,
         ingredients:
             item.ingredients.map((ingredient) => _completeOrToggleRecursively(ingredient, complete: value)).toList());

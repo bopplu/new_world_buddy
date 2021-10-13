@@ -911,22 +911,33 @@
       ]
     },
     {
-      "name": "Cleaving Crude Iron Armaments",
-      "category": "crates",
-      "tier": 1,
+      "name": "Starmetal Ingot",
+      "category": "Ore",
+      "tier": 4,
       "ingredients": [
         {
-          "name": "Iron Ore",
-          "quantity": 15
+          "name": "Starmetal Ore",
+          "quantity": 6
         },
         {
-          "name": "Green Wood",
-          "quantity": 10
+          "name": "Steel Ingot",
+          "quantity": 2
         },
         {
-          "name": "Rawhide",
-          "quantity": 25
+          "name": "Sand Flux",
+          "quantity": 1
+        },
+        {
+          "name": "Charcoal",
+          "quantity": 2
         }
+      ]
+    },
+    {
+      "name": "Starmetal Ore",
+      "category": "",
+      "tier": 4,
+      "ingredients": [
       ]
     }
   ]

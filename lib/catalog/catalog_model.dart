@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/src/iterable_extensions.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:http/http.dart' as http;
@@ -7,14 +8,9 @@ import 'package:new_world_buddy/catalog/category_screen.dart';
 import 'package:new_world_buddy/catalog/item.dart';
 import 'package:new_world_buddy/commons/generic_card.dart';
 
-final futureItemProvider = FutureProvider<List<Item>>((ref) async {
-  final response = await http.get(Uri.parse('https://storage.googleapis.com/new-world-buddy/items.json'));
-
-  if (response.statusCode == 200) {
-    return ItemList.fromJson(jsonDecode(response.body)).items;
-  } else {
-    throw Exception('Failed to load item list');
-  }
+final futureItemProvider = StreamProvider<List<Item>>((ref) {
+  final snapshots = FirebaseFirestore.instance.collection('items').snapshots();
+  return snapshots.map((snapshot) => snapshot.docs.map((doc) => Item.fromJson(doc.data())).toList());
 });
 
 final selectedCategory = StateProvider<ItemCategory?>((ref) => null);

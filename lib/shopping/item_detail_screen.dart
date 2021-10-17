@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:new_world_buddy/catalog/add_screen.dart';
+import 'package:new_world_buddy/catalog/item.dart';
 import 'package:new_world_buddy/shopping/shopping_list_model.dart';
 
 class ItemDetailScreen extends HookWidget {
@@ -12,9 +13,6 @@ class ItemDetailScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final selectedItem = useProvider(selectedItemProvider)!;
-
-    final textStyle = Theme.of(context).textTheme.bodyText1;
-    final textStyleStrikethrough = textStyle!.copyWith(decoration: TextDecoration.lineThrough);
 
     return Scaffold(
       appBar: AppBar(
@@ -36,52 +34,23 @@ class ItemDetailScreen extends HookWidget {
             ),
           ),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                const Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: Text('Ingredients:'),
-                ),
-                ...selectedItem.ingredients.map(
-                  (e) => InkWell(
-                    onTap: () {
-                      context.read(progressSelectedItemIdProvider).state = e.id;
-                      Navigator.of(context).pushNamed(AddProgressScreen.route);
-                    },
-                    onDoubleTap: () {
-                      context.read(selectedItemIdProvider).state = e.id;
-                      Navigator.of(context).pushNamed(ItemDetailScreen.route);
-                    },
-                    onLongPress: () {
-                      context.read(shoppingListProvider.notifier).completeItem(e.id);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                      child: Row(
-                        children: [
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                WidgetSpan(
-                                  child: SizedBox(
-                                    width: 77,
-                                    child: Text(
-                                      '${e.completedAmount} / ${e.amount}',
-                                    ),
-                                  ),
-                                ),
-                                TextSpan(text: e.name),
-                              ],
-                              style: e.complete() ? textStyleStrikethrough : textStyle,
-                            ),
-                          ),
-                        ],
+            child: Scrollbar(
+              isAlwaysShown: true,
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      const Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: Text('Ingredients:'),
                       ),
-                    ),
+                      ...selectedItem.ingredients.expand((e) => _createItemRows(e, 0))
+                    ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           SizedBox(
@@ -123,6 +92,64 @@ class ItemDetailScreen extends HookWidget {
             ),
           )
         ],
+      ),
+    );
+  }
+}
+
+List<Widget> _createItemRows(ShoppingItem item, int level) {
+  return [ItemRow(item, level), ...item.ingredients.expand((ing) => _createItemRows(ing, level + 1))];
+}
+
+class ItemRow extends StatelessWidget {
+  final int level;
+  final ShoppingItem item;
+
+  const ItemRow(this.item, this.level, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final textStyle = Theme.of(context).textTheme.bodyText1;
+    final textStyleStrikethrough = textStyle!.copyWith(decoration: TextDecoration.lineThrough);
+
+    final multiplier = level == 1 ? 12.0 : 18.0;
+    final pad = level * multiplier;
+
+    return InkWell(
+      onTap: () {
+        context.read(progressSelectedItemIdProvider).state = item.id;
+        Navigator.of(context).pushNamed(AddProgressScreen.route);
+      },
+      onLongPress: () {
+        context.read(shoppingListProvider.notifier).completeItem(item.id);
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        child: Row(
+          children: [
+            if (level != 0)
+              Padding(
+                padding: EdgeInsets.only(left: pad, right: pad),
+                child: const Text('L'),
+              ),
+            Text.rich(
+              TextSpan(
+                children: [
+                  WidgetSpan(
+                    child: SizedBox(
+                      width: 77,
+                      child: Text(
+                        '${item.completedAmount} / ${item.amount}',
+                      ),
+                    ),
+                  ),
+                  TextSpan(text: item.name),
+                ],
+                style: item.complete() ? textStyleStrikethrough : textStyle,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

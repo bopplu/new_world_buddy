@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -27,19 +28,24 @@ class NewWorldBuddy extends HookWidget {
     // final preferences = useProvider(preferencesProvider);
     // preferences?.clear();
 
-    return MaterialApp(
-      title: 'New World Buddy',
-      theme: ThemeData.dark(),
-      home: const DashboardScreen(),
-      routes: {
-        ShoppingListScreen.route: (_) => const ShoppingListScreen(),
-        CatalogScreen.route: (_) => const CatalogScreen(),
-        CategoryScreen.route: (_) => const CategoryScreen(),
-        AddScreen.route: (_) => const AddScreen(),
-        ItemDetailScreen.route: (_) => const ItemDetailScreen(),
-        AddProgressScreen.route: (_) => const AddProgressScreen(),
-        AddProgressIngredientListScreen.route: (_) => const AddProgressIngredientListScreen()
-      },
+    final _init = Firebase.initializeApp();
+
+    return FutureBuilder(
+      future: _init,
+      builder: (context, snapshot) => MaterialApp(
+        title: 'New World Buddy',
+        theme: ThemeData.dark(),
+        home: const DashboardScreen(),
+        routes: {
+          ShoppingListScreen.route: (_) => const ShoppingListScreen(),
+          CatalogScreen.route: (_) => const CatalogScreen(),
+          CategoryScreen.route: (_) => const CategoryScreen(),
+          AddScreen.route: (_) => const AddScreen(),
+          ItemDetailScreen.route: (_) => const ItemDetailScreen(),
+          AddProgressScreen.route: (_) => const AddProgressScreen(),
+          AddProgressIngredientListScreen.route: (_) => const AddProgressIngredientListScreen()
+        },
+      ),
     );
   }
 }

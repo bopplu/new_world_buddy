@@ -5,14 +5,14 @@ import 'package:new_world_buddy/catalog/add_screen.dart';
 import 'package:new_world_buddy/catalog/item.dart';
 import 'package:new_world_buddy/shopping/shopping_list_model.dart';
 
-class ItemDetailScreen extends HookWidget {
+class ItemDetailScreen extends HookConsumerWidget {
   static const String route = '/item-detail';
 
   const ItemDetailScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final selectedItem = useProvider(selectedItemProvider)!;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedItem = ref.watch(selectedItemProvider)!;
 
     return Scaffold(
       appBar: AppBar(
@@ -60,7 +60,7 @@ class ItemDetailScreen extends HookWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    context.read(progressSelectedItemIdProvider).state = selectedItem.id;
+                    ref.read(progressSelectedItemIdProvider.state).state = selectedItem.id;
                     Navigator.of(context).pushNamed(AddProgressScreen.route);
                   },
                   child: const Text(
@@ -74,7 +74,7 @@ class ItemDetailScreen extends HookWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    context.read(shoppingListProvider.notifier).completeItem(selectedItem.id);
+                    ref.read(shoppingListProvider.notifier).completeItem(selectedItem.id);
                     if (!selectedItem.complete()) {
                       Navigator.of(context).pop();
                     }
@@ -101,14 +101,14 @@ List<Widget> _createItemRows(ShoppingItem item, int level) {
   return [ItemRow(item, level), ...item.ingredients.expand((ing) => _createItemRows(ing, level + 1))];
 }
 
-class ItemRow extends StatelessWidget {
+class ItemRow extends ConsumerWidget {
   final int level;
   final ShoppingItem item;
 
   const ItemRow(this.item, this.level, {Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final textStyle = Theme.of(context).textTheme.bodyText1;
     final textStyleStrikethrough = textStyle!.copyWith(decoration: TextDecoration.lineThrough);
 
@@ -117,11 +117,11 @@ class ItemRow extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        context.read(progressSelectedItemIdProvider).state = item.id;
+        ref.read(progressSelectedItemIdProvider.state).state = item.id;
         Navigator.of(context).pushNamed(AddProgressScreen.route);
       },
       onLongPress: () {
-        context.read(shoppingListProvider.notifier).completeItem(item.id);
+        ref.read(shoppingListProvider.notifier).completeItem(item.id);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),

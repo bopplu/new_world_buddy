@@ -25,21 +25,21 @@ final filteredShoppingListProvider = Provider<List<ShoppingItem>>((ref) {
 final selectedItemIdProvider = StateProvider<String>((ref) => '');
 final selectedItemProvider = Provider<ShoppingItem?>((ref) {
   final shoppingList = ref.watch(shoppingListProvider);
-  final selectedItemId = ref.watch(selectedItemIdProvider);
+  final selectedItemId = ref.watch(selectedItemIdProvider.state);
   return ref.watch(shoppingListProvider.notifier)._findByIdRecursively(selectedItemId.state, shoppingList);
 });
 
 final progressSelectedItemIdProvider = StateProvider<String>((ref) => '');
 final progressSelectedItemProvider = Provider<ShoppingItem?>((ref) {
   final shoppingList = ref.watch(shoppingListProvider);
-  final selectedItemId = ref.watch(progressSelectedItemIdProvider);
+  final selectedItemId = ref.watch(progressSelectedItemIdProvider.state);
   return ref.watch(shoppingListProvider.notifier)._findByIdRecursively(selectedItemId.state, shoppingList);
 });
 
 final progressIngredientItemIdProvider = StateProvider<String>((ref) => '');
 final progressIngredientItemProvider = Provider<ShoppingItem?>((ref) {
   final ingredientList = ref.watch(ingredientListProvider);
-  final selectedItemId = ref.watch(progressIngredientItemIdProvider);
+  final selectedItemId = ref.watch(progressIngredientItemIdProvider.state);
   return ingredientList.singleWhereOrNull((ingredient) => ingredient.id == selectedItemId.state);
 });
 
@@ -238,7 +238,7 @@ class ShoppingList extends StateNotifier<List<ShoppingItem>> {
 final futurePreferencesProvider =
     FutureProvider<SharedPreferences>((ref) async => await SharedPreferences.getInstance());
 
-final preferencesProvider = Provider((ref) {
+final preferencesProvider = Provider<SharedPreferences?>((ref) {
   return ref.watch(futurePreferencesProvider).maybeWhen(
       data: (data) => data,
       error: (err, stack) {

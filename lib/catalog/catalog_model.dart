@@ -16,7 +16,7 @@ final futureItemProvider = StreamProvider<List<Item>>((ref) {
 final selectedCategory = StateProvider<ItemCategory?>((ref) => null);
 
 final itemsByCategory = Provider<AsyncValue<List<Item>>>((ref) {
-  final category = ref.watch(selectedCategory);
+  final category = ref.watch(selectedCategory.state);
   return ref.watch(futureItemProvider).whenData((list) {
     list.sort((a, b) => a.tier == b.tier ? a.name.compareTo(b.name) : a.tier.compareTo(b.tier));
     return list.where((item) => item.category.toLowerCase() == category.state?.name.toLowerCase()).toList();

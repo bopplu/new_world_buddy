@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:new_world_buddy/catalog/catalog_model.dart';
 import 'package:new_world_buddy/commons/hooks/item_conversion.dart';
@@ -30,77 +29,77 @@ class Amount extends StateNotifier<int> {
   }
 }
 
-class AddScreen extends HookWidget {
+class AddScreen extends HookConsumerWidget {
   static const String route = "/add-screen";
 
   const AddScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final itemName = ModalRoute.of(context)!.settings.arguments as String;
-    final item = useProvider(itemProvider(itemName))!;
-    final _amount = useProvider(zeroAmountProvider);
-    final location = useProvider(selectedLocationProvider);
-    final shoppingItemForItem = useConvertItem(item, _amount, location);
+    final item = ref.watch(itemProvider(itemName))!;
+    final amount = ref.watch(zeroAmountProvider);
+    final location = ref.watch(selectedLocationProvider);
+    final shoppingItemForItem = useConvertItem(ref, item, amount, location);
 
     return AddWidget(
       'Add',
       zeroAmountProvider,
       doneAction: () {
-        context.read(shoppingListProvider.notifier).addItem(shoppingItemForItem, _amount, location);
+        ref.read(shoppingListProvider.notifier).addItem(shoppingItemForItem, amount, location);
         Navigator.popUntil(context, ModalRoute.withName(ShoppingListScreen.route));
-        context.read(zeroAmountProvider.notifier).reset();
+        ref.read(zeroAmountProvider.notifier).reset();
       },
     );
   }
 }
 
-class AddProgressScreen extends HookWidget {
+class AddProgressScreen extends HookConsumerWidget {
   static const String route = "/add-progress-screen";
 
   const AddProgressScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final _amount = useProvider(selectedItemAmountProvider);
-    final selectedItem = useProvider(progressSelectedItemProvider)!;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final _amount = ref.watch(selectedItemAmountProvider);
+    final selectedItem = ref.watch(progressSelectedItemProvider)!;
 
     return AddWidget(
       'Add Progress to ${selectedItem.name}',
       selectedItemAmountProvider,
       doneAction: () {
-        context.read(shoppingListProvider.notifier).updateItem(selectedItem.id, completedAmount: _amount);
+        ref.read(shoppingListProvider.notifier).updateItem(selectedItem.id, completedAmount: _amount);
         Navigator.of(context).pop();
       },
     );
   }
 }
 
-class AddProgressIngredientListScreen extends HookWidget {
+class AddProgressIngredientListScreen extends HookConsumerWidget {
   static const String route = "/add-progress-ingredient-list";
 
   const AddProgressIngredientListScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final _amount = useProvider(zeroAmountProvider);
-    final selectedItem = useProvider(progressIngredientItemProvider);
-    final location = useProvider(selectedLocationProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final amount = ref.watch(zeroAmountProvider);
+    final selectedItem = ref.watch(progressIngredientItemProvider);
+    final location = ref.watch(selectedLocationProvider);
 
     return AddWidget(
       'Add Progress to ${selectedItem?.name}',
       zeroAmountProvider,
       doneAction: () {
         Navigator.of(context).pop();
-        context
+        ref
             .read(shoppingListProvider.notifier)
-            .updateAllUntilDepleted(selectedItem!.name, location, completedAmount: _amount);
+            .updateAllUntilDepleted(selectedItem!.name, location, completedAmount: amount);
       },
     );
   }
 }
 
-class AddWidget extends HookWidget {
+class AddWidget extends HookConsumerWidget {
   final String title;
   final VoidCallback doneAction;
   final AutoDisposeStateNotifierProvider<Amount, int> passedAmountProvider;
@@ -108,64 +107,74 @@ class AddWidget extends HookWidget {
   const AddWidget(this.title, this.passedAmountProvider, {required this.doneAction, Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final _amount = useProvider(passedAmountProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final amount = ref.watch(passedAmountProvider);
+    const double resetHeight = 50;
+    const double counterHeight = 100;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final orientation = MediaQuery.of(context).orientation;
+    final gridExtend = screenHeight - (resetHeight + counterHeight + 500);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
         actions: [
           TextButton(
+            onPressed: doneAction,
             child: Text(
               'Done',
               style: Theme.of(context).textTheme.bodyText1!.copyWith(fontWeight: FontWeight.bold),
             ),
-            onPressed: doneAction,
           )
         ],
       ),
       body: Column(
         children: [
           SizedBox(
-            height: 100,
+            height: counterHeight,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  '$_amount',
+                  '$amount',
                   style: Theme.of(context).textTheme.headline3,
                   textAlign: TextAlign.center,
                 ),
               ],
             ),
           ),
-          GridView.count(
-            primary: false,
-            childAspectRatio: 4 / 3,
-            semanticChildCount: 6,
-            crossAxisCount: 2,
-            children: [
-              AdderCard(1, context.read(passedAmountProvider.notifier).increment),
-              AdderCard(5, context.read(passedAmountProvider.notifier).increment),
-              AdderCard(10, context.read(passedAmountProvider.notifier).increment),
-              AdderCard(30, context.read(passedAmountProvider.notifier).increment),
-              AdderCard(50, context.read(passedAmountProvider.notifier).increment),
-              AdderCard(100, context.read(passedAmountProvider.notifier).increment)
-            ],
-            shrinkWrap: true,
+          Expanded(
+            child: LayoutBuilder(
+              builder: (ctx, constraints) => GridView(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: orientation == Orientation.landscape ? 3 : 2,
+                    mainAxisExtent: constraints.maxHeight * (1 / (orientation == Orientation.landscape ? 2 : 3))),
+                primary: false,
+                semanticChildCount: 6,
+                shrinkWrap: true,
+                children: [
+                  AdderCard(1, ref.read(passedAmountProvider.notifier).increment),
+                  AdderCard(5, ref.read(passedAmountProvider.notifier).increment),
+                  AdderCard(10, ref.read(passedAmountProvider.notifier).increment),
+                  AdderCard(30, ref.read(passedAmountProvider.notifier).increment),
+                  AdderCard(50, ref.read(passedAmountProvider.notifier).increment),
+                  AdderCard(100, ref.read(passedAmountProvider.notifier).increment)
+                ],
+              ),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(15.0),
             child: SizedBox(
-              height: 100,
+              height: resetHeight,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextButton(
                     onPressed: () {
-                      context.read(passedAmountProvider.notifier).reset();
+                      ref.read(passedAmountProvider.notifier).reset();
                     },
                     child: const Text(
                       'Reset',
@@ -192,10 +201,15 @@ class AdderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       child: SizedBox(
-        child: Card(
-          child: Text(toAdd.toString()),
-        ),
         height: 30,
+        child: Card(
+          child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                toAdd.toString(),
+                style: const TextStyle(fontSize: 48),
+              )),
+        ),
       ),
       onTap: () {
         increaserFn(toAdd);

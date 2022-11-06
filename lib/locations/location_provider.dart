@@ -20,12 +20,12 @@ final locationListProvider = Provider<List<String>>((ref) {
       .maybeWhen(data: (locationList) => locationList.locations, orElse: () => ['Failed to load Location List']);
 });
 
-final playerLocationsProvider = StateNotifierProvider((ref) {
+final playerLocationsProvider = StateNotifierProvider<PlayerLocations, dynamic>((ref) {
   final prefs = ref.watch(preferencesProvider);
   return PlayerLocations(prefs);
 });
 
-final selectedLocationProvider = StateNotifierProvider((ref) {
+final selectedLocationProvider = StateNotifierProvider<LocationSelection, dynamic>((ref) {
   final prefs = ref.watch(preferencesProvider);
   final locationList = ref.watch(locationListProvider);
   return LocationSelection(prefs, locationList[0]);

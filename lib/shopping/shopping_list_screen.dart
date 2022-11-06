@@ -13,17 +13,17 @@ import 'package:new_world_buddy/shopping/shopping_list_model.dart';
 
 enum ShoppingListActions { refresh, clear, clearDone }
 
-class ShoppingListScreen extends HookWidget {
+class ShoppingListScreen extends HookConsumerWidget {
   static const route = 'shopping-list';
 
   const ShoppingListScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final filteredShoppingList = useProvider(filteredShoppingListProvider);
-    final ingredientShoppingList = useProvider(ingredientListProvider);
-    final locationList = useProvider(locationListProvider);
-    final selectedLocation = useProvider(selectedLocationProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final filteredShoppingList = ref.watch(filteredShoppingListProvider);
+    final ingredientShoppingList = ref.watch(ingredientListProvider);
+    final locationList = ref.watch(locationListProvider);
+    final selectedLocation = ref.watch(selectedLocationProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -40,7 +40,7 @@ class ShoppingListScreen extends HookWidget {
               )
                   .toList(),
               onChanged: (newVal) {
-                context.read(selectedLocationProvider.notifier).selectLocation(newVal ?? selectedLocation);
+                ref.read(selectedLocationProvider.notifier).selectLocation(newVal ?? selectedLocation);
               },
             ),
           ],
@@ -53,14 +53,14 @@ class ShoppingListScreen extends HookWidget {
               onSelected: (choice) {
                 switch (choice) {
                   case ShoppingListActions.clear:
-                    context.read(shoppingListProvider.notifier).clearList(selectedLocation);
+                    ref.read(shoppingListProvider.notifier).clearList(selectedLocation);
                     break;
                   case ShoppingListActions.clearDone:
-                    context.read(shoppingListProvider.notifier).clearDone(selectedLocation);
+                    ref.read(shoppingListProvider.notifier).clearDone(selectedLocation);
                     break;
                   case ShoppingListActions.refresh:
-                    context.refresh(futureItemProvider);
-                    context.refresh(futureCategoryProvider);
+                    ref.refresh(futureItemProvider);
+                    ref.refresh(futureCategoryProvider.future);
                     break;
                 }
               },
@@ -92,11 +92,11 @@ class ShoppingListScreen extends HookWidget {
                 index,
                 filteredShoppingList,
                 onTap: () {
-                  ctx.read(selectedItemIdProvider).state = filteredShoppingList[index].id;
+                  ref.read(selectedItemIdProvider.notifier).state = filteredShoppingList[index].id;
                   Navigator.pushNamed(ctx, ItemDetailScreen.route);
                 },
                 onLongPress: () {
-                  ctx.read(shoppingListProvider.notifier).completeItem(filteredShoppingList[index].id);
+                  ref.read(shoppingListProvider.notifier).completeItem(filteredShoppingList[index].id);
                 },
               ),
               separatorBuilder: (_, index) => const Divider(
@@ -114,12 +114,12 @@ class ShoppingListScreen extends HookWidget {
                 index,
                 ingredientShoppingList,
                 onTap: () {
-                  ctx.read(progressIngredientItemIdProvider).state = ingredientShoppingList[index].id;
+                  ref.read(progressIngredientItemIdProvider.notifier).state = ingredientShoppingList[index].id;
                   Navigator.of(context).pushNamed(AddProgressIngredientListScreen.route);
                 },
                 onLongPress: () {
                   final item = ingredientShoppingList[index];
-                  ctx.read(shoppingListProvider.notifier).completeAll(item.name, item.location);
+                  ref.read(shoppingListProvider.notifier).completeAll(item.name, item.location);
                 },
               ),
               separatorBuilder: (_, index) => const Divider(
